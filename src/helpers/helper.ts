@@ -4,8 +4,16 @@ const erros = {
     0:{
         "msg":"A senha é obrigatória",
         "codHttp": 400,
-        "codErro": 17
-    }
+    },
+    1:{
+        "msg": "Informe o login",
+        "codHttp": 400,
+    },
+    2:{
+        "msg": "Credenciais inválidas",
+        "codHttp": 401,
+        "codErro": 2
+    },
 }
 const erros_old= {
     0: {
@@ -203,11 +211,11 @@ export const ReturnSucesso = (res:Response, valor:any) => {
     })
 }
 
-export const ReturnErro = (res:Response, msg :string, status:Number, codigo:number) => {
+export const ReturnErro = (res:Response, msg :string, status:Number) => {
     return res.status(status).json( {
         "erro":true,
         "valor":msg,
-        "codigo":codigo
+        "codigo":9998
     })
 }
 
@@ -224,11 +232,9 @@ export const ReturnErroPadrao = (res:Response, cod:number) => {
     }
 
     return res.status(erros[cod].codHttp).json({
-        
         "erro":true,
         "valor":erros[cod].msg,
-        "codigo":erros[cod].codErro
-        
+        "codigo":cod
     })
 }
 

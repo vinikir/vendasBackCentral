@@ -1,7 +1,12 @@
 import { Schema, model, Document } from "mongoose";
 
-
-interface UserInterface extends Document {
+export interface UserInterface {
+    ativo: Boolean;
+    nome:String
+    login:String
+    senha:String
+}
+interface User extends Document {
     ativo: Boolean;
     nome:String
     login:String
@@ -18,4 +23,6 @@ export const UserSchema = new Schema({
     timestamps: true
 })
 
-export default model<UserInterface>('user',UserSchema)
+UserSchema.index({ login: 1 }, { unique: true });
+
+export default model<User>('user',UserSchema)
