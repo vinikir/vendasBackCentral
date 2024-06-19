@@ -4,7 +4,7 @@ import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../
 import bcrypt from 'bcrypt'
 import UserModel from "../models/userModel";
 import dotenv from 'dotenv'
-import { UserInterface } from "../schemas/Users";
+import { UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
 
 class UserControlle{
 
@@ -26,7 +26,7 @@ class UserControlle{
                 return ReturnErroPadrao( res, 0)
             }
             
-            const permitidoCadastro = await this.validaLogin( login, res)
+            const permitidoCadastro:ValidarLoginInterface = await this.validaLogin( login, res)
             
             if(!permitidoCadastro.permitido){
 
@@ -36,7 +36,7 @@ class UserControlle{
          
             const hashPassword = await bcrypt.hash(senha, 8)
            
-            let user:User = {
+            let user:UserInterface = {
                 ativo: true,
                 nome, 
                 login, 
@@ -67,10 +67,10 @@ class UserControlle{
 
     }
 
-    private async validaLogin( login:string, res){
+    private async validaLogin( login:string, res:Response) {
         try{
 
-            const res_login = await UserModel.findLogin(login)
+            const res_login:UserInterface = await UserModel.findLogin(login)
            
             if(typeof res_login != "undefined" && res_login.length > 0 || res_login.login){
                 return {
@@ -81,6 +81,7 @@ class UserControlle{
             
             return {
                 permitido:true,
+                msg:""
             }
 
         }catch(e){

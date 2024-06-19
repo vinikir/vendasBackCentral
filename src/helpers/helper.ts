@@ -211,7 +211,7 @@ export const ReturnSucesso = (res:Response, valor:any) => {
     })
 }
 
-export const ReturnErro = (res:Response, msg :string, status:Number) => {
+export const ReturnErro = (res:Response, msg :string, status:number) => {
     return res.status(status).json( {
         "erro":true,
         "valor":msg,
