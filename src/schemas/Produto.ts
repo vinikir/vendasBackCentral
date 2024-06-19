@@ -27,7 +27,7 @@ export const ProdutoSchema = new Schema({
     timestamps: true
 })
 
-ProdutoSchema.index({ nome: 1 });
+ProdutoSchema.index({ nome: 1},{ unique:true });
 
 
 export default model<ProdutoInterface>('produto',ProdutoSchema)

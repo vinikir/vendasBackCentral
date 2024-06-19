@@ -18,6 +18,10 @@ const erros = {
         "msg": "A quantidade para estoque é obrigatório",
         "codHttp": 400,
     },
+    4:{
+        "msg": "Margem não pode ser menor que 10",
+        "codHttp": 400,
+    },
 }
 const erros_old= {
     0: {

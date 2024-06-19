@@ -21,10 +21,10 @@ class ProdutoModel {
         
     }
 
-    public async buscar() {
+    public async buscar(infos:object) {
         try{
 
-            return await ProdutoShema.find()
+            return await ProdutoShema.find(infos).sort({'nome':1})
 
         }catch(e){
 
@@ -35,7 +35,18 @@ class ProdutoModel {
     }
 
     
+    public async atualizar(id:string, infos:object){
+        try{
 
+            return await ProdutoShema.updateOne({_id:id}, infos, { new: true })
+
+        }catch(e){
+
+            console.log(e)
+            throw new Error(e.message);
+
+        }
+    }
     
 
     

@@ -15,7 +15,10 @@ routes.post('/user',UserController.create.bind(UserController))
 routes.post('/login',UserController.login)	
 
 routes.post('/produto',ProdutoController.salvar.bind(ProdutoController))	
-routes.get('/produtos',ProdutoController.buscar)	
+routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	
+
+routes.get('/produtos',ProdutoController.buscar)
+
 
 
 

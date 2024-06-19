@@ -20,7 +20,7 @@ class App {
     }
 
     private database():void{
-        mongoose.connect("mongodb://localhost:27017/vendas")
+        mongoose.connect("mongodb://localhost:27017/vendas_teste")
     }
 
     private routes() {
