@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../helpers/helper"
 import bcrypt from 'bcrypt'
-import UserModel from "../models/userModel";
+import UserModel from "../models/UserModel";
 import dotenv from 'dotenv'
 import { UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
 

@@ -12,7 +12,11 @@ const erros = {
     2:{
         "msg": "Credenciais inválidas",
         "codHttp": 401,
-        "codErro": 2
+        
+    },
+    3:{
+        "msg": "A quantidade para estoque é obrigatório",
+        "codHttp": 400,
     },
 }
 const erros_old= {
