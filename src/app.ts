@@ -20,7 +20,8 @@ class App {
     }
 
     private database():void{
-        mongoose.connect("mongodb://localhost:27017/vendas_teste")
+        mongoose.connect("mongodb://roundhouse.proxy.rlwy.net:42024/vendas")
+        //mongoose.connect("mongodb://localhost:27017/vendas_teste")
     }
 
     private routes() {
