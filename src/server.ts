@@ -15,7 +15,7 @@ app.use((err, req, res, next) => {
 
 try{
     const host:string = "0.0.0.0"
-    app.listen(port, host)
+    app.listen(port)
 
 }catch(e){
     console.log("server",e)
