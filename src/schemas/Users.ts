@@ -1,23 +1,25 @@
 import { Schema, model, Document } from "mongoose";
 
-export interface UserInterface {
-    ativo: Boolean;
-    nome:String
-    login:String
-    senha:String
-}
 interface User extends Document {
     ativo: Boolean;
-    nome:String
-    login:String
-    senha:String
+    nome:String;
+    login:String;
+    senha:String;
+    permisoes:Array<string>;
+    tipo:String;
+    cpfCnpj:String;
+
 }
 
 export const UserSchema = new Schema({
     ativo: Boolean,
     nome: String,
     login:String,
-    senha:String
+    senha:String,
+    permisoes:Array,
+    tipo:String,
+    cpfCnpj:String
+
     
 }, {
     timestamps: true

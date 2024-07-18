@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../helpers/helper"
 import ProdutoModel from "../models/ProdutoModel";
-
+import KardexModel from "../models/KardexModel";
+import moment from "moment-timezone";
 class ProdutoControlle{
 
     private calculavalorVenda (custo, margem){
@@ -24,7 +25,8 @@ class ProdutoControlle{
                 valorCompra,
                 descontoMaximo,
                 margem,
-                quantidade 
+                tipo,
+                quantidade
             } = req.body; 
 
             let infos = {
@@ -35,28 +37,64 @@ class ProdutoControlle{
                 descontoMaximo,
                 margem,
                 estoque:quantidade,
-                servico:false
+                servico:false,
+                tipo:tipo
             }
 
-            if(typeof margem == "undefined"){
+            if(typeof margem == "undefined" && tipo == "venda"){
                 infos.margem = 20
+            }
+
+            if( margem < 10 && tipo == "venda"){
+                return ReturnErroPadrao(res, 3 )
+            }
+
+
+            if(typeof tipo == "undefined" || ( tipo != "insumo"  && tipo != "venda"  && tipo != "servico" ) ){
+                return ReturnErroPadrao(res, 8 )
             }
 
             if(typeof ativo == "undefined"){
                 infos.ativo = true
             }
 
-            if( margem < 10){
-                return ReturnErroPadrao(res, 3 )
-            }
-
-            if(typeof quantidade == "undefined" || quantidade == ""){
+            if( ( typeof quantidade == "undefined" || quantidade == "" ) && tipo != "servico" ){
                 return ReturnErroPadrao(res, 3 )
             } 
 
-            infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
+            if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
+                infos.quantidade = 0
+            }
+            
+            if(tipo == "venda" ){
+
+                infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
+
+            }else{
+
+                infos.valorVenda = valorCompra
+
+            }
+            
 
             const res_produto = await ProdutoModel.salvar(infos)
+            
+            if(tipo != "servico" ){
+
+                const infosKardex = {
+                    tipo: "entrada",
+                    nome: nome,
+                    idProduto: res_produto._id,
+                    valor: infos.valorVenda,
+                    data: moment().tz("America/Sao_Paulo").format(),
+                    qtd:quantidade
+                }
+    
+                await KardexModel.salvar(infosKardex)
+
+            }
+            
+
             return ReturnSucesso(res,res_produto)
 
         }catch(e){
@@ -90,6 +128,8 @@ class ProdutoControlle{
                 estoque:quantidade,
                 servico:false
             }
+
+            
             if(typeof id == "undefined"){
                 return ReturnErroPadrao(res, 3 )
             }
@@ -100,6 +140,10 @@ class ProdutoControlle{
 
             if(typeof ativo == "undefined"){
                 infos.ativo = true
+            }
+
+            if(typeof infos.estoque == "undefined"){
+                infos.estoque = 0
             }
 
             if( margem < 10){

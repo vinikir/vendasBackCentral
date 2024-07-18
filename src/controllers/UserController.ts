@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 import UserModel from "../models/UserModel";
 import dotenv from 'dotenv'
 import { UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
-
+import { ValidarCpfCnpj } from "../helpers/Funcoes";
 class UserControlle{
 
     public async buscarTodos(req: Request, res: Response) : Promise<object>{
@@ -15,17 +15,31 @@ class UserControlle{
 
     public async create(req: Request, res: Response) : Promise<object>{
         try{
-
-          
             
-            const { ativo, nome, login, senha }: UserInterface = req.body; 
-
-            
+            const { ativo, nome, login, senha, cpfCnpj, tipo }: UserInterface = req.body; 
                 
-            if(!senha || senha == ''){
+            if(typeof senha == "undefined" || senha == ''){
                 return ReturnErroPadrao( res, 0)
             }
+
+            if(typeof cpfCnpj == "undefined" || cpfCnpj == ''){
+                return ReturnErroPadrao( res, 6)
+            }
+
+            if(typeof tipo == "undefined" || tipo == ''){
+                return ReturnErroPadrao( res, 7)
+            }
             
+            
+            const resValidaCnpj = ValidarCpfCnpj(cpfCnpj)
+
+            if(resValidaCnpj.valido == false){
+                return ReturnErro(res,resValidaCnpj.tipo, 998 )
+            }
+
+            const cpfCnpjLimpo = resValidaCnpj.valor
+            
+
             const permitidoCadastro:ValidarLoginInterface = await this.validaLogin( login, res)
             
             if(!permitidoCadastro.permitido){
@@ -33,6 +47,8 @@ class UserControlle{
                 return ReturnErro(res,permitidoCadastro.msg, 500)
 
             }
+
+            
          
             const hashPassword = await bcrypt.hash(senha, 8)
            
@@ -41,7 +57,8 @@ class UserControlle{
                 nome, 
                 login, 
                 senha: hashPassword, 
-               
+                cpfCnpj:cpfCnpjLimpo,
+                tipo:tipo
             }
 
 

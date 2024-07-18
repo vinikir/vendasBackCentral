@@ -20,10 +20,10 @@ class App {
     }
 
     private database():void{
-        //mongodb://mongo:mNIRjLXQBTuSCWwQFYNDCPUGlRaBbvVE@mongodb.railway.internal:27017
-        //mongodb://mongo:mNIRjLXQBTuSCWwQFYNDCPUGlRaBbvVE@roundhouse.proxy.rlwy.net:42024
-        mongoose.connect("mongodb://mongo:VuRYKjifhiuGBjQokLcDmgxAJXSlSIGB@mongodb.railway.internal:27017")
-        //mongoose.connect("mongodb://localhost:27017/vendas_teste")
+       
+        //mongoose.connect("mongodb://mongo:VuRYKjifhiuGBjQokLcDmgxAJXSlSIGB@mongodb.railway.internal:27017")
+        //mongoose.connect("mongodb://localhost:27017/vendas")
+        mongoose.connect("mongodb://localhost:27017/vendas_teste")
     }
 
     private routes() {

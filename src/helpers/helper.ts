@@ -22,6 +22,22 @@ const erros = {
         "msg": "Margem não pode ser menor que 10",
         "codHttp": 400,
     },
+    5:{
+        "msg": "O valor é obrigatório",
+        "codHttp": 400,
+    },
+    6:{
+        "msg": "CPF ou CNPJ é obrigatório",
+        "codHttp": 400,
+    },
+    7:{
+        "msg": "O tipo do usuário é obrigatório",
+        "codHttp": 400,
+    },
+    8:{
+        "msg": "O tipo do produto é invalido",
+        "codHttp": 400,
+    },
 }
 const erros_old= {
     0: {
