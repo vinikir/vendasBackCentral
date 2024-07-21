@@ -10,6 +10,7 @@ import moment from "moment-timezone";
 class VendaController {
    
     public async RegistrarVenda (req: Request, res: Response) {
+
         try{
 
 
@@ -51,11 +52,14 @@ class VendaController {
                 let novoSaldo:number
 
                 if(produto.tipo == "servico"){
+
                     novoSaldo = produto.estoque? produto.estoque : 0   + produtoVendidoEncontrado[0].qtd
+
                 }else{
+
                     novoSaldo = produto.estoque - produtoVendidoEncontrado[0].qtd
+
                 }
-                
                 
                 await ProdutoModel.atualizar(produto._id, {estoque:novoSaldo })
 
@@ -71,15 +75,15 @@ class VendaController {
                 }
 
                 await KardexModel.salvar(infosKardex)
+
             }
-
-           
-
 
             return ReturnSucesso(res, "ok")
 
         }catch(e){
+
             return ReturnErroCatch(res, e.message)
+
         }
 
     }

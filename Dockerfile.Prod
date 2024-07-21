@@ -1,0 +1,24 @@
+FROM node:16.0.0-alpine as builder
+WORKDIR /app
+COPY nodemon.json ./
+COPY package.json ./
+COPY src ./src
+RUN ls -a
+RUN npm install
+RUN npm run build
+
+FROM builder
+ENV NODE_ENV production
+WORKDIR /app
+COPY package.json ./
+COPY apminsightnode.json ./
+COPY nodemon.json ./
+COPY --from=builder /app/dist .
+COPY --from=builder /app/node_modules /app/node_modules
+
+RUN npm install pm2 -g
+
+EXPOSE 80
+EXPOSE 5000
+
+CMD ["pm2-runtime", "--log-type", "raw", "server.js"]

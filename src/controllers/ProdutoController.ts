@@ -170,10 +170,22 @@ class ProdutoControlle{
     public async buscar(req: Request, res: Response){
         try{
 
-            let infos = {}
+            let infos = { }
             
             if(typeof req.query != "undefined" && typeof req.query.id  != "undefined"){
                 infos._id = req.query.id
+            }
+
+            if(typeof req.query != "undefined" && typeof req.query.search  != "undefined" && req.query.search  != "undefined" && req.query.search  != ""){
+                infos.nome ={ 
+                    $regex: new RegExp(req.query.search, 'i') // 'i' para insensibilidade a maiúsculas e minúsculas
+                }
+            }
+
+            if(typeof req.query != "undefined" && typeof req.query.tipo  != "undefined" && req.query.tipo  != "undefined" && req.query.tipo  != ""){
+
+                infos.tipo = req.query.tipo
+
             }
 
             const produtos = await ProdutoModel.buscar(infos)

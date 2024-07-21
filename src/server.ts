@@ -6,7 +6,7 @@ dotenv.config()
 console.log("server aberto on *:"+process.env.APP_PORT)
 
 
-var port = process.env.PORT || 3300;
+var port = process.env.PORT || 80;
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
