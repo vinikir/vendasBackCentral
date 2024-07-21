@@ -21,7 +21,7 @@ class App {
 
     private database():void{
        
-        mongoose.connect("mongodb+srv://vinikir:bZGelmKUSysEoXQ1@gem.2hrtlg6.mongodb.net/vendas")
+        mongoose.connect("mongodb+srv://vinikir:bZGelmKUSysEoXQ1@gem.2hrtlg6.mongodb.net/vendas?ssl=false")
         //mongoose.connect("mongodb://localhost:27017/vendas")
         //mongoose.connect("mongodb://localhost:27017/vendas_teste")
     }
