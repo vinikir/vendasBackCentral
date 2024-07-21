@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 443;
 
 console.log("server aberto on *:"+port)
 
