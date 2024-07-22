@@ -171,7 +171,7 @@ class ProdutoControlle{
         try{
 
             let infos = { }
-            
+            let limit:number = 50
             if(typeof req.query != "undefined" && typeof req.query.id  != "undefined"){
                 infos._id = req.query.id
             }
@@ -180,6 +180,7 @@ class ProdutoControlle{
                 infos.nome ={ 
                     $regex: new RegExp(req.query.search, 'i') // 'i' para insensibilidade a maiúsculas e minúsculas
                 }
+                limit = 0
             }
 
             if(typeof req.query != "undefined" && typeof req.query.tipo  != "undefined" && req.query.tipo  != "undefined" && req.query.tipo  != ""){
@@ -188,7 +189,9 @@ class ProdutoControlle{
 
             }
 
-            const produtos = await ProdutoModel.buscar(infos)
+            
+
+            const produtos = await ProdutoModel.buscar(infos, limit)
            
             return ReturnSucesso(res,produtos)
         }catch(e){

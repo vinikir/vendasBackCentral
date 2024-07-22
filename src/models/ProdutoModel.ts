@@ -21,10 +21,10 @@ class ProdutoModel {
         
     }
 
-    public async buscar(infos:object) {
+    public async buscar(infos:object, limit:number) {
         try{
 
-            return await ProdutoShema.find(infos).sort({'nome':1})
+            return await ProdutoShema.find(infos).sort({'nome':1}).limit(limit)
 
         }catch(e){
 
