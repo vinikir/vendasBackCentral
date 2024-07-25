@@ -2,11 +2,6 @@ import express from "express";
 import cors from "cors"
 import mongoose from "mongoose";
 import routes from "./routes/routes";
-<<<<<<< HEAD
-
-=======
-import autoIncrement from 'mongoose-auto-increment';
->>>>>>> develop
 class App {
 
     public express: express.Application
