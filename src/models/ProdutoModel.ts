@@ -3,7 +3,7 @@ import ProdutoShema from "../schemas/Produto"
 class ProdutoModel {
 
     public async getAll(){
-        console.log(await ProdutoShema.find())
+      return await ProdutoShema.find()
     }
 
     public async salvar(infos:object){

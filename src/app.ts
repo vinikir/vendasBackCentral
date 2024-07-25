@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors"
 import mongoose from "mongoose";
 import routes from "./routes/routes";
+import autoIncrement from 'mongoose-auto-increment';
 class App {
 
     public express: express.Application
@@ -20,10 +21,15 @@ class App {
     }
 
     private database():void{
-       
-        //mongoose.connect("mongodb://mongo:VuRYKjifhiuGBjQokLcDmgxAJXSlSIGB@mongodb.railway.internal:27017")
-        //mongoose.connect("mongodb://localhost:27017/vendas")
-        mongoose.connect("mongodb://localhost:27017/vendas_teste")
+        try{
+            //mongoose.connect("mongodb+srv://vinikir:bZGelmKUSysEoXQ1@gem.2hrtlg6.mongodb.net/vendas?retryWrites=true&w=majority&appName=GEM")
+            //mongoose.connect("mongodb://localhost:27017/vendas")
+            
+            mongoose.connect("mongodb://localhost:27017/vendas_teste")
+        }catch(e){
+            console.log(e.message)
+        }
+        
     }
 
     private routes() {

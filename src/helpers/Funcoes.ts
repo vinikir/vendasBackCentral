@@ -82,12 +82,11 @@ export const ValidaSaldoPositivo = (produtosVenda: Array<object>, produtosEstoqu
         const produto = produtosVenda[index];
 
         const produtoencontrado = produtosEstoque.filter(el => el._id == produto.produtoId)
-
         if(typeof produtoencontrado[0] == 'undefined'){
 
             return {
                 valido: false,
-                tipo: 'O item não encontrado',
+                tipo: 'Item não encontrado',
             
             };
 
