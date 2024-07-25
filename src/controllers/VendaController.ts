@@ -8,13 +8,25 @@ import VendaModel from "../models/VendaModel";
 import moment from "moment-timezone";
 
 class VendaController {
+
+    public async BuscarVenda(req: Request, res: Response){
+        try{
+            const produtos = await VendaModel.getAll()
+
+            return ReturnSucesso(res, produtos)
+        }catch(e){
+
+            return ReturnErroCatch(res, e.message)
+
+        }
+    }
    
     public async RegistrarVenda (req: Request, res: Response) {
 
         try{
 
 
-            const { userId, tipoVenda,  produtos} = req.body
+            const { userId, tipoVenda,  produtos, user, status, pagamento} = req.body
 
             const produtosIds = ExtrairProdutoIds(produtos)
 
@@ -33,9 +45,12 @@ class VendaController {
             }
 
             const InfosSalvar = {
+                user,
                 userId,
                 tipoVenda,
-                produtos
+                produtos,
+                status,
+                pagamento
             }
 
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)

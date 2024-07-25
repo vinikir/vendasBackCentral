@@ -24,6 +24,8 @@ routes.post('/investimento-salvar',FinanceiroController.EntradaInvestimento )
 routes.post('/investimento-saida-compra',FinanceiroController.SaidaInvestimentoMercadoria )
 
 routes.post('/venda',VendaController.RegistrarVenda )
+routes.get('/venda',VendaController.BuscarVenda )
+
 
 
 
