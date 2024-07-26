@@ -10,7 +10,12 @@ interface ProdutoInterface extends Document {
     margem:number,
     descontoMaximo:number,
     descricao:string,
-    tipo:string
+    tipo:string,
+    marca:String,
+    sku?:String,
+    codigoBarra?:String,
+    aplicacao?:String,
+    observacao?:String
 }
 
 export const ProdutoSchema = new Schema({
@@ -22,7 +27,13 @@ export const ProdutoSchema = new Schema({
     margem:Number,
     descontoMaximo:Number,
     descricao:String,
-    tipo:String
+    tipo:String,
+    marca:String,
+    sku:String,
+    codigoBarra:String,
+    aplicacao:String,
+    observacao:String
+
 }, {
     timestamps: true
 })

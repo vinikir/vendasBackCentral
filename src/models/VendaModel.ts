@@ -8,11 +8,14 @@ class VendaModel {
     }
 
     public async salvar(infos:object){
-        let id = 1
-        try{
-            const ultimavenda = await VendaSchema.findOne({}).sort({ vendaId: -1 })
 
-            if(typeof ultimavenda.vendaId != "undefined"){
+        let id = 1
+
+        try{
+
+            const ultimavenda = await VendaSchema.findOne({}).sort({ vendaId: -1 })
+            
+            if(ultimavenda != null && typeof ultimavenda.vendaId != "undefined"   ){
                 id = ultimavenda.vendaId +1
             }
 
