@@ -26,7 +26,12 @@ class ProdutoControlle{
                 descontoMaximo,
                 margem,
                 tipo,
-                quantidade
+                quantidade,
+                marca,
+                sku,
+                codigoBarra,
+                aplicacao,
+                observacao
             } = req.body; 
 
             let infos = {
@@ -38,7 +43,12 @@ class ProdutoControlle{
                 margem,
                 estoque:quantidade,
                 servico:false,
-                tipo:tipo
+                tipo:tipo,
+                marca,
+                sku,
+                codigoBarra,
+                aplicacao,
+                observacao
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){
