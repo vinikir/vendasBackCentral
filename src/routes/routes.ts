@@ -14,6 +14,7 @@ routes.get('/', (req, res) => {
 routes.get('/e',UserController.buscarTodos)	
 routes.post('/user',UserController.create.bind(UserController))	
 routes.post('/login',UserController.login)	
+routes.post('/trocar-senha',UserController.trocarSenha )
 
 routes.post('/produto',ProdutoController.salvar.bind(ProdutoController))	
 routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	

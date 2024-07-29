@@ -84,6 +84,32 @@ class UserControlle{
 
     }
 
+    public async trocarSenha(req: Request, res: Response){
+        try{
+            const {  senha, id } = req.body; 
+
+            if(typeof senha == "undefined" || senha == ''){
+                return ReturnErroPadrao( res, 0)
+            }
+
+            if(typeof id == "undefined" || id == ''){
+                return ReturnErroPadrao( res, 9)
+            }
+
+            const hashPassword = await bcrypt.hash(senha, 8)
+
+
+            const res_up = await UserModel.atualizar(id, {senha: hashPassword})
+
+            return ReturnSucesso(res,res_up)
+
+        }catch(e){
+
+            return ReturnErroCatch(res, e.message)
+
+        }
+    }
+
     private async validaLogin( login:string, res:Response) {
         try{
 
