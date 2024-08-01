@@ -4,7 +4,7 @@ import UserController from '../controllers/UserController'
 import ProdutoController from '../controllers/ProdutoController'
 import FinanceiroController from '../controllers/FinanceiroController'
 import VendaController from '../controllers/VendaController'
-
+import OrcamentoController from '../controllers/OrcamentoController'
 const routes = Router()
 
 routes.get('/', (req, res) => {
@@ -15,6 +15,7 @@ routes.get('/e',UserController.buscarTodos)
 routes.post('/user',UserController.create.bind(UserController))	
 routes.post('/login',UserController.login)	
 routes.post('/trocar-senha',UserController.trocarSenha )
+routes.post('/orcamento/salvar', OrcamentoController.salvar)
 
 routes.post('/produto',ProdutoController.salvar.bind(ProdutoController))	
 routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	
