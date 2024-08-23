@@ -3,8 +3,8 @@ import  VendaSchema from "../schemas/Venda";
 
 class VendaModel {
 
-    public async getAll(){
-        return await VendaSchema.find().sort({ vendaId: -1 })
+    public async busca(){
+        return await VendaSchema.find({status:"finalizado"}).sort({ data: -1 })
     }
 
     public async salvar(infos:object){

@@ -17,6 +17,21 @@ class InvestimentoModel {
         }
         
     }
+
+    public async busca(){
+
+        try{
+
+            return await Investimento.find({}).sort({'dataMovimentacao':-1})
+
+        }catch(e){
+
+            console.log(e)
+            throw new Error(e.message);
+
+        }
+        
+    }
     
 }
 

@@ -21,7 +21,7 @@ class OrcamentoController {
                 _id:{ "$in" :produtosIds}
             }
 
-            const produtosBuscaPorId = await ProdutoModel.buscar(buscaProdutoQury)
+            const produtosBuscaPorId = await ProdutoModel.buscar(buscaProdutoQury, 50)
 
             const res_ValidaSaldoPositivo = ValidaSaldoPositivo( produtos, produtosBuscaPorId )
 
@@ -46,8 +46,7 @@ class OrcamentoController {
                 throw new Error("Erro ao salvar orçamento");
             }
 
-
-            return ReturnSucesso(res, "ok")
+            return ReturnSucesso(res, res_salvarOrcametno)
 
         }catch(e){
 
@@ -55,6 +54,20 @@ class OrcamentoController {
 
         }
 
+    }
+
+    public async buscar (req: Request, res: Response) {
+        try{
+
+            const res_busca = await OrcamentoModel.getAll() 
+
+            return ReturnSucesso(res, res_busca)
+
+        }catch(e){
+
+            return ReturnErroCatch(res, e.message)
+
+        }
     }
 }
 export default new OrcamentoController()

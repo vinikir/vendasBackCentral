@@ -1,5 +1,6 @@
 import { Schema, model, Document } from "mongoose";
-
+import mongoose from "mongoose";
+import moment from "moment-timezone";
 
 interface ProdutoInterface extends Document {
     ativo: Boolean,
@@ -39,6 +40,5 @@ export const ProdutoSchema = new Schema({
 })
 
 ProdutoSchema.index({ nome: 1});
-
 
 export default model<ProdutoInterface>('produto',ProdutoSchema)

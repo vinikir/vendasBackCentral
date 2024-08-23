@@ -193,6 +193,7 @@ class ProdutoControlle{
                 limit = 0
             }
 
+
             if(typeof req.query != "undefined" && typeof req.query.tipo  != "undefined" && req.query.tipo  != "undefined" && req.query.tipo  != ""){
 
                 infos.tipo = req.query.tipo

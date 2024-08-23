@@ -50,7 +50,8 @@ class VendaController {
                 tipoVenda,
                 produtos,
                 status,
-                pagamento
+                pagamento,
+                data: moment().tz("America/Sao_Paulo").format(),
             }
 
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)
