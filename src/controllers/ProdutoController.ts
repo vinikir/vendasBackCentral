@@ -182,6 +182,8 @@ class ProdutoControlle{
 
             let infos = { }
             let limit:number = 50
+            let ofset:number = 0
+
             if(typeof req.query != "undefined" && typeof req.query.id  != "undefined"){
                 infos._id = req.query.id
             }
@@ -199,10 +201,22 @@ class ProdutoControlle{
                 infos.tipo = req.query.tipo
 
             }
+            
+            if(typeof req.query != "undefined" && typeof  req.query.limit  != "undefined" && req.query.limit  != ""){
+
+                limit = req.query.limit
+
+            }
+
+            if(typeof req.query != "undefined" && typeof  req.query.ofset  != "undefined" && req.query.ofset  != ""){
+
+                ofset = req.query.ofset
+
+            }
 
             
 
-            const produtos = await ProdutoModel.buscar(infos, limit)
+            const produtos = await ProdutoModel.buscar(infos, limit, ofset)
            
             return ReturnSucesso(res,produtos)
         }catch(e){
