@@ -1,0 +1,15 @@
+FROM node:18-alpine
+WORKDIR /app
+COPY nodemon.json ./
+COPY package.json ./
+COPY src ./src
+RUN ls -a
+RUN npm install
+RUN npm run build
+
+RUN npm install pm2 -g
+
+EXPOSE 80
+EXPOSE 5000
+
+CMD ["pm2-runtime", "--log-type", "raw", "server.js"]

@@ -1,0 +1,8 @@
+name: Continuos Integration
+on: 
+  push:
+    branches:
+      - main
+jobs:
+  continuos-integration:
+    runs-on: ubunto-latest

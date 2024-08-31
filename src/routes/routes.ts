@@ -8,7 +8,7 @@ import OrcamentoController from '../controllers/OrcamentoController'
 const routes = Router()
 
 routes.get('/', (req, res) => {
-    res.send({"versao":"01"})
+    res.send({"versao":"015"})
 })	
 
 routes.get('/e',UserController.buscarTodos)	
