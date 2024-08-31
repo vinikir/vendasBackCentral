@@ -3,6 +3,40 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 jobs:
-  continuos-integration:
-    runs-on: ubunto-latest
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install  
+      - name: Build application
+        run: npm run build
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_IMAGE_NAME }} .
+      - name: Log in to AWS ECR
+        run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+      - name: Push image to AWS ECR
+        run: docker push ${{ secrets.DOCKER_IMAGE_NAME }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Connect to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_INSTANCE_ID }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+      - name: Pull Docker image
+        run: docker pull ${{ secrets.DOCKER_IMAGE_NAME }}
+      - name: Run container
+        run: docker run -d -p ${{ secrets.DOCKER_PORT }}:8080 ${{ secrets.DOCKER_IMAGE_NAME }}
