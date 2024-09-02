@@ -6,6 +6,14 @@ class InvestimentoModel {
     public async salvar(infos:object){
 
         try{
+            
+            const ultimaMovimentacao = await Investimento.findOne({}).sort({ id: -1 })
+            
+            if(ultimaMovimentacao != null && typeof ultimaMovimentacao.id != "undefined"   ){
+                id = ultimaMovimentacao.id +1
+            }
+
+            infos.id = id
 
             return await Investimento.create(infos)
 
@@ -22,7 +30,7 @@ class InvestimentoModel {
 
         try{
 
-            return await Investimento.find({}).sort({'dataMovimentacao':-1})
+            return await Investimento.find({}).sort({id:-1})
 
         }catch(e){
 

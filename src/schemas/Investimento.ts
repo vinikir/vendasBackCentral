@@ -2,6 +2,7 @@ import { Schema, model, Document } from "mongoose";
 
 
 interface InvestimentoInterface extends Document {
+    id:Number,
     tipo: String,
     valor: Number,
     dataSalvou: String,
@@ -11,6 +12,7 @@ interface InvestimentoInterface extends Document {
 }
 
 export const InvestimentoSchema = new Schema({
+    id:Number,
     tipo: String,
     valor: Number,
     dataSalvou: String,
