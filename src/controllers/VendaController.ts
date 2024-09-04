@@ -11,7 +11,7 @@ class VendaController {
 
     public async BuscarVenda(req: Request, res: Response){
         try{
-            const produtos = await VendaModel.getAll()
+            const produtos = await VendaModel.busca()
 
             return ReturnSucesso(res, produtos)
         }catch(e){
@@ -26,7 +26,7 @@ class VendaController {
         try{
 
 
-            const { userId, tipoVenda,  produtos, user, status, pagamento} = req.body
+            const { userId, tipoVenda,  produtos, user, status, pagamento, valor} = req.body
 
             const produtosIds = ExtrairProdutoIds(produtos)
 
@@ -52,6 +52,7 @@ class VendaController {
                 status,
                 pagamento,
                 data: moment().tz("America/Sao_Paulo").format(),
+                valor: valor
             }
 
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)
