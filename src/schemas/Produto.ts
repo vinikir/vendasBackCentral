@@ -2,21 +2,40 @@ import { Schema, model, Document } from "mongoose";
 import mongoose from "mongoose";
 import moment from "moment-timezone";
 
-interface ProdutoInterface extends Document {
+export interface ProdutoInterface extends Document {
     ativo: Boolean,
-    nome: string,
+    nome: string | undefined,
     valorVenda: Number,
     valorCompra: Number,
-    estoque: number,
+    estoque: number | string,
     margem:number,
     descontoMaximo:number,
-    descricao:string,
+    descricao?:string | undefined,
     tipo:string,
     marca:String,
+    sku?:String | undefined,
+    codigoBarra?:String | undefined,
+    aplicacao?:String | undefined,
+    observacao?:String | undefined,
+    img?:String | undefined,
+}
+
+export interface ProdutoInterfaceUpdate extends Document {
+    ativo?: Boolean,
+    nome?: string,
+    valorVenda?: Number,
+    valorCompra?: Number,
+    estoque?: number,
+    margem?:number,
+    descontoMaximo?:number,
+    descricao?:string,
+    tipo?:string,
+    marca?:String,
     sku?:String,
     codigoBarra?:String,
     aplicacao?:String,
-    observacao?:String
+    observacao?:String,
+    img?:String,
 }
 
 export const ProdutoSchema = new Schema({
@@ -33,7 +52,8 @@ export const ProdutoSchema = new Schema({
     sku:String,
     codigoBarra:String,
     aplicacao:String,
-    observacao:String
+    observacao:String,
+    img:String,
 
 }, {
     timestamps: true

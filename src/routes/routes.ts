@@ -5,11 +5,25 @@ import ProdutoController from '../controllers/ProdutoController'
 import FinanceiroController from '../controllers/FinanceiroController'
 import VendaController from '../controllers/VendaController'
 import OrcamentoController from '../controllers/OrcamentoController'
+import OrdemServicoController from '../controllers/OrdemServicoController'
+import StorageController from '../controllers/StorageController'
+
+import multer from 'multer'
+
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage});
+
 const routes = Router()
 
 routes.get('/', (req, res) => {
     res.send({"versao":"015"})
 })	
+
+routes.post('/', (req, res) => {
+    res.send({"versao":"015 post"})
+})	
+
 
 routes.get('/e',UserController.buscarTodos)	
 routes.post('/user',UserController.create.bind(UserController))	
@@ -31,8 +45,12 @@ routes.get('/caixa',FinanceiroController.BuscaCaixa.bind(FinanceiroController) )
 routes.post('/venda',VendaController.RegistrarVenda )
 routes.get('/venda',VendaController.BuscarVenda )
 
+routes.get('/frete-correio',VendaController.freteCorreios )
 
 
+routes.post('/ordem-servico/salvar', OrdemServicoController.salvar)
+
+routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 
 
 

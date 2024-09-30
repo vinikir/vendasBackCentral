@@ -45,14 +45,14 @@ const erros = {
 }
 
 
-export const ReturnSucesso = (res:Response, valor:any) => {
+export const ReturnSucesso = (res:Response, valor:any):object => {
     return res.json( {
         "erro":false,
         "valor":valor
     })
 }
 
-export const ReturnErro = (res:Response, msg :string, status:number) => {
+export const ReturnErro = (res:Response, msg :string, status:number):object => {
     return res.status(status).json( {
         "erro":true,
         "valor":msg,
@@ -60,7 +60,7 @@ export const ReturnErro = (res:Response, msg :string, status:number) => {
     })
 }
 
-export const ReturnErroPadrao = (res:Response, cod:number) => {
+export const ReturnErroPadrao = (res:Response, cod:number):object => {
     if(!erros[cod]){
         return res.status(500).
         json({

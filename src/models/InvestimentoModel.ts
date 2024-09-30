@@ -6,7 +6,7 @@ class InvestimentoModel {
     public async salvar(infos:object){
 
         try{
-            
+            let id = 1
             const ultimaMovimentacao = await Investimento.findOne({}).sort({ id: -1 })
             
             if(ultimaMovimentacao != null && typeof ultimaMovimentacao.id != "undefined"   ){
