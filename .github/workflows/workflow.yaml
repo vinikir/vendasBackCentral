@@ -34,7 +34,7 @@ jobs:
         run: ls
       - name: Acessar pasta
         run:  |
-          cd /home/ec2-user/Projetos/vendasBackCentral
+          cd /home/user/Projetos/vendasBackCentral
           git pull
           npm run build
           pm2 restart server
