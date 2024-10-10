@@ -35,5 +35,6 @@ jobs:
           script: |
             whoami
             ls -al
+            cd Projetos/vendasBackCentral
       
      
