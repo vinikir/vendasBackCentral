@@ -36,5 +36,9 @@ jobs:
             whoami
             ls -al
             cd Projetos/vendasBackCentral
+            git pull
+            yarn
+            npm run build
+            pm2 restart server
       
      
