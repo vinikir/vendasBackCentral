@@ -21,7 +21,7 @@ routes.get('/', (req, res) => {
 })	
 
 routes.post('/', (req, res) => {
-    res.send({"versao":"015 post"})
+    res.send({"versao":"3 post"})
 })	
 
 
