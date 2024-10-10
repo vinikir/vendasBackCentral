@@ -30,9 +30,13 @@ jobs:
           host: ${{ secrets.EC2_INSTANCE_ID }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          
+        
       - name: Verificar e executar comandos na pasta correta
+        env:
+            target: /home/ec2-user/Projetos/vendasBackCentral
         run: |
-          cd ~/Projetos/vendasBackCentral || exit 1
+          pwd ~
           git pull
           yarn
           npm run build
