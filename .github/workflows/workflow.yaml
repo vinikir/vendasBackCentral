@@ -32,9 +32,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
       - name: Update code
         run: |
-          git checkout develop
-          git pull origin develop
-          git checkout main
-          git merge develop
-          git push origin main
+          cd /home/runner/work/vendasBackCentral/vendasBackCentral
+          git pull
      
