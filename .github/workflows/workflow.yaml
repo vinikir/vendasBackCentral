@@ -32,6 +32,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
       - name: Verificar e executar comandos na pasta correta
         run: |
-          # Listar diretórios para depuração
-          ls
+          cd ~/Projetos/vendasBackCentral || exit 1
+          git pull
+          yarn
+          npm run build
+          pm2 restart server
      
