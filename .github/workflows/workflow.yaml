@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,7 +30,11 @@ jobs:
           host: ${{ secrets.EC2_INSTANCE_ID }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-      - name: Verificar e executar comandos na pasta correta
-        run: 
-          pm2 restart server
+      - name: Update code
+        run: |
+          git checkout develop
+          git pull origin develop
+          git checkout main
+          git merge develop
+          git push origin main
      
