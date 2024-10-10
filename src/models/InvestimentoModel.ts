@@ -12,7 +12,7 @@ class InvestimentoModel {
             if(ultimaMovimentacao != null && typeof ultimaMovimentacao.id != "undefined"   ){
                 id = ultimaMovimentacao.id +1
             }
-
+            
             infos.id = id
 
             return await Investimento.create(infos)

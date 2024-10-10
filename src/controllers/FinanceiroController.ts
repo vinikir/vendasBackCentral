@@ -40,7 +40,7 @@ class FinanceiroController {
     public async SaidaInvestimentoMercadoria(req: Request, res: Response) {
         try{
 
-            const {  valor, dataMovimentacao } = req.body;
+            const {  valor, dataMovimentacao, informacoes } = req.body;
 
             if(typeof valor == "undefined" || valor == ""){
                 return ReturnErroPadrao(res, 5)
@@ -54,7 +54,8 @@ class FinanceiroController {
                 tipo:"compra mercadoria",
                 dataSalvou:moment().tz("America/Sao_Paulo").format(),
                 dataMovimentacao:dataMovimentacao,
-                valor:valor
+                valor:valor,
+                informacoes:informacoes
             }
     
             const resSalvar = await InvestimentoModel.salvar(infos)
@@ -114,7 +115,6 @@ class FinanceiroController {
                     informacoes:venda.user,
                 })
             }
-            console.log(vendas)
             return ReturnSucesso(res, this.ordenarPorData(retono))
 
         }catch(e){
