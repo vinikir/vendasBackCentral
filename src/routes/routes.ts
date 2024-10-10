@@ -17,7 +17,7 @@ const upload = multer({ storage: storage});
 const routes = Router()
 
 routes.get('/', (req, res) => {
-    res.send({"versao":"4"})
+    res.send({"versao":"5"})
 })	
 
 routes.post('/', (req, res) => {

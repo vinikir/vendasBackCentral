@@ -39,6 +39,7 @@ jobs:
             git pull
             yarn
             npm run build
+            sudo fuser -k 80/tcp
             pm2 restart server
       
      
