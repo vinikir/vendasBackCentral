@@ -6,11 +6,93 @@ import UserModel from "../models/UserModel";
 import dotenv from 'dotenv'
 import { UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
 import { ValidarCpfCnpj } from "../helpers/Funcoes";
+import { UserSearchParams } from "../interfaces/Interface";
+import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
 class UserControlle{
 
     public async buscarTodos(req: Request, res: Response) : Promise<object>{
         const users = UserModel.getAll()
         return res.json({status:"ok"})
+    }
+
+    private aplicarMascaraCpfCnpj(valor:string) {
+        // Remover qualquer caractere que não seja número
+        const valorLimpo = valor.replace(/\D/g, '');
+      
+        // Verificar se é CPF (11 dígitos) ou CNPJ (14 dígitos)
+        if (valorLimpo.length === 11) {
+          // CPF - Formato: 123.***.***-45
+          return valorLimpo.replace(/^(\d{3})\d{6}(\d{2})$/, '$1.***.***-$2');
+        } else if (valorLimpo.length === 14) {
+          // CNPJ - Formato: 123.***.***/****-45
+          return valorLimpo.replace(/^(\d{3})\d{9}(\d{2})$/, '$1.***.***/****-$2');
+        } else {
+          // Se não for CPF nem CNPJ válido
+          return 'Número inválido';
+        }
+    }
+
+   
+
+    public async buscar(req: Request, res: Response): Promise<object>{
+        try{
+
+            let infos:any = { }
+            let limit:number = 50
+            let offset:number = 0
+         
+            const query:UserSearchParams = req.query
+
+            if(typeof query != "undefined" && typeof query.id  != "undefined"){
+                infos._id = query.id
+            }
+
+           
+            if(typeof query != "undefined" && typeof query.search  != "undefined" && query.search  != "undefined" && query.search  != ""){
+
+                query.search = ajustarPesquisaParaBuscaLike(query.search)
+
+                if(!isNaN(query.search)){
+                    infos.cpfCnpj ={ 
+                        $regex: new RegExp(query.search, 'i') 
+                    }
+                }else{
+
+                    infos.nome ={ 
+                        $regex: new RegExp(query.search, 'i') 
+                    }
+                }
+                
+            }
+            
+            if(typeof query != "undefined" && typeof  query.limit  != "undefined" ){
+
+                limit = query.limit
+
+            }
+
+            if(typeof query != "undefined" && typeof  query.offset  != "undefined" ){
+
+                offset = query.offset
+
+            }
+
+            
+
+            let usuario = await UserModel.buscar(infos, limit, offset)
+
+           
+
+            for (let index = 0; index < usuario.length; index++) {
+                const element = usuario[index];
+                usuario[index].cpfCnpj =  this.aplicarMascaraCpfCnpj(element.cpfCnpj) 
+            }
+           
+            return ReturnSucesso(res,usuario)
+
+        }catch(e){
+            return ReturnErroCatch(res, e.message)
+        }
     }
 
     public async create(req: Request, res: Response) : Promise<object>{

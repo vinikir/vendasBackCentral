@@ -18,6 +18,7 @@ export interface OrdemServicoInterface extends Document {
     ano:Number;
     checkList?:Array<object>;
     status:String;
+    km:Number
 }
 
 export const OrdemServicoSchema = new Schema({
@@ -37,6 +38,7 @@ export const OrdemServicoSchema = new Schema({
     ano:Number,
     checkList:Array,
     status:String,
+    km:Number
 }, {
     timestamps: true
 })

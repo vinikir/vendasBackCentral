@@ -22,3 +22,12 @@ export interface ProductSearchParams{
     id?: string;
 }
 
+export interface UserSearchParams{
+    limit?: number;  
+    offset?: number;  
+    search?: string;
+    id?: string;
+    cpfCnpj?: string;
+    nome?: string;
+}
+

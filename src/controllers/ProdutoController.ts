@@ -7,6 +7,7 @@ import { ProductSearchParams } from "../interfaces/Interface";
 import { ProdutoInterface, ProdutoInterfaceUpdate } from "../schemas/Produto";
 import { kardexTiposEnums } from "../enums/KardexTiposEnums";
 import { CategoriaProdutosEnums } from "../enums/CategoriaProdutosEnums";
+import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
 class ProdutoControlle{
 
     private calculavalorVenda (custo, margem){
@@ -237,8 +238,9 @@ class ProdutoControlle{
             }
 
             if(typeof query != "undefined" && typeof query.search  != "undefined" && query.search  != "undefined" && query.search  != ""){
+                query.search = ajustarPesquisaParaBuscaLike(query.search)
                 infos.nome ={ 
-                    $regex: new RegExp(query.search, 'i') 
+                    $regex: query.search
                 }
                 limit = 0
             }

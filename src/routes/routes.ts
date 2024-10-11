@@ -31,7 +31,7 @@ routes.post('/login',UserController.login)
 routes.post('/trocar-senha',UserController.trocarSenha )
 routes.post('/orcamento/salvar', OrcamentoController.salvar)
 routes.post('/orcamentos', OrcamentoController.buscar)
-
+routes.get('/user-buscar',UserController.buscar.bind(UserController))
 routes.post('/produto',ProdutoController.salvar.bind(ProdutoController))	
 routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	
 
@@ -48,7 +48,7 @@ routes.get('/venda',VendaController.BuscarVenda )
 routes.get('/frete-correio',VendaController.freteCorreios )
 
 
-routes.post('/ordem-servico/salvar', OrdemServicoController.salvar)
+routes.post('/ordem-servico/salvar',upload.any(), OrdemServicoController.salvar)
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 
