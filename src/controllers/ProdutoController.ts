@@ -6,6 +6,7 @@ import moment from "moment-timezone";
 import { ProductSearchParams } from "../interfaces/Interface";
 import { ProdutoInterface, ProdutoInterfaceUpdate } from "../schemas/Produto";
 import { kardexTiposEnums } from "../enums/KardexTiposEnums";
+import { CategoriaProdutosEnums } from "../enums/CategoriaProdutosEnums";
 class ProdutoControlle{
 
     private calculavalorVenda (custo, margem){
@@ -16,10 +17,16 @@ class ProdutoControlle{
         return parseFloat(valorVenda.toFixed(2));
     }
 
+    private validarCategorias(categorias: Array<string>): boolean {
+        return categorias.every((categoria:string) =>
+          Object.values(CategoriaProdutosEnums).includes(categoria.toLowerCase())
+        );
+    }
+
     public async salvar(req: Request, res: Response):  Promise<object>{
         try{
 
-        
+            
             const {  
                 ativo,
                 nome,
@@ -85,11 +92,28 @@ class ProdutoControlle{
                 return ReturnErroPadrao(res, 3 )
             } 
 
-            if( ( typeof categoria == "undefined" || typeof categoria != "object" || categoria.length == 0 ) && tipo != "servico" ){
-                return ReturnErroPadrao(res, 10 )
-            } 
+           
+            if(tipo == "venda"){
 
-            infos.categoria = categoria
+                if( ( typeof categoria == "undefined" ) ){
+                    return ReturnErroPadrao(res, 10 )
+                } 
+    
+                if(typeof categoria != "object" ){
+                    return ReturnErroPadrao(res, 11 )
+                }
+    
+                if( categoria.length <= 0 ){
+                    return ReturnErroPadrao(res, 12 )
+                }
+    
+                if(this.validarCategorias(categoria) == false){
+                    return ReturnErroPadrao(res, 13 )
+                }
+
+                infos.categoria = categoria.map(str => str.toLowerCase());
+            }
+            
 
             if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
 
@@ -129,7 +153,7 @@ class ProdutoControlle{
             return ReturnSucesso(res,res_produto)
 
         }catch(e){
-
+            console.log("e",e)
             return ReturnErroCatch(res, e.message)
 
         }

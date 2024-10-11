@@ -7,6 +7,8 @@ export enum CategoriaProdutosEnums{
     Eletronico = "eletronico",
     Cabo = "cabo",
     Eletrica = "eletrica",
-    Penu = "penu",
+    Pneu = "pneu",
     Freio = "freios"
 }
+
+
