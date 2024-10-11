@@ -32,7 +32,10 @@ class ProdutoControlle{
                 sku,
                 codigoBarra,
                 aplicacao,
-                observacao
+                observacao,
+                categoria,
+                imgAdicional,
+                img
             }:ProdutoInterface = req.body; 
 
             const quantidade:number | string =  req.body.quantidade
@@ -70,12 +73,28 @@ class ProdutoControlle{
                 infos.ativo = true
             }
 
+            if(typeof img != "undefined"){
+                infos.img = img
+            }
+
+            if(typeof imgAdicional != "undefined"){
+                infos.imgAdicional = imgAdicional
+            }
+
             if( ( typeof quantidade == "undefined" || quantidade == "" ) && tipo != "servico" ){
                 return ReturnErroPadrao(res, 3 )
             } 
 
+            if( ( typeof categoria == "undefined" || typeof categoria != "object" || categoria.length == 0 ) && tipo != "servico" ){
+                return ReturnErroPadrao(res, 10 )
+            } 
+
+            infos.categoria = categoria
+
             if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
+
                 infos.estoque = 0
+
             }
             
             if(tipo == "venda" ){
