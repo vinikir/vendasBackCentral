@@ -26,8 +26,14 @@ class ProdutoControlle{
                 descontoMaximo,
                 margem,
                 tipo,
-                quantidade
-            } = req.body; 
+                marca,
+                sku,
+                codigoBarra,
+                aplicacao,
+                observacao,
+                quantidade,
+                categoria
+            }:ProdutoInterface = req.body; 
 
             let infos = {
                 ativo,
@@ -38,7 +44,12 @@ class ProdutoControlle{
                 margem,
                 estoque:quantidade,
                 servico:false,
-                tipo:tipo
+                tipo:tipo,
+                marca,
+                sku,
+                codigoBarra,
+                aplicacao,
+                observacao,
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){
@@ -57,6 +68,10 @@ class ProdutoControlle{
             if(typeof ativo == "undefined"){
                 infos.ativo = true
             }
+
+            if( ( typeof categoria == "undefined" || typeof categoria != "object" || categoria.lenght == 0 )  && tipo != "servico" ){
+                return ReturnErroPadrao(res, 3 )
+            } 
 
             if( ( typeof quantidade == "undefined" || quantidade == "" ) && tipo != "servico" ){
                 return ReturnErroPadrao(res, 3 )
