@@ -3,12 +3,14 @@ import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../
 import ProdutoModel from "../models/ProdutoModel";
 import KardexModel from "../models/KardexModel";
 import moment from "moment-timezone";
+import { ProductSearchParams } from "../interfaces/Interface";
+import { ProdutoInterface, ProdutoInterfaceUpdate } from "../schemas/Produto";
+import { kardexTiposEnums } from "../enums/KardexTiposEnums";
 class ProdutoControlle{
 
     private calculavalorVenda (custo, margem){
         const margemEmReais = custo * (margem / 100);
 
-        // Calcula o valor de venda
         const valorVenda = custo + margemEmReais;
       
         return parseFloat(valorVenda.toFixed(2));
@@ -30,12 +32,12 @@ class ProdutoControlle{
                 sku,
                 codigoBarra,
                 aplicacao,
-                observacao,
-                quantidade,
-                categoria
+                observacao
             }:ProdutoInterface = req.body; 
 
-            let infos = {
+            const quantidade:number | string =  req.body.quantidade
+
+            let infos:ProdutoInterface = {
                 ativo,
                 nome,
                 descricao,
@@ -43,13 +45,12 @@ class ProdutoControlle{
                 descontoMaximo,
                 margem,
                 estoque:quantidade,
-                servico:false,
                 tipo:tipo,
                 marca,
                 sku,
                 codigoBarra,
                 aplicacao,
-                observacao,
+                observacao
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){
@@ -69,16 +70,12 @@ class ProdutoControlle{
                 infos.ativo = true
             }
 
-            if( ( typeof categoria == "undefined" || typeof categoria != "object" || categoria.lenght == 0 )  && tipo != "servico" ){
-                return ReturnErroPadrao(res, 3 )
-            } 
-
             if( ( typeof quantidade == "undefined" || quantidade == "" ) && tipo != "servico" ){
                 return ReturnErroPadrao(res, 3 )
             } 
 
             if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
-                infos.quantidade = 0
+                infos.estoque = 0
             }
             
             if(tipo == "venda" ){
@@ -97,7 +94,7 @@ class ProdutoControlle{
             if(tipo != "servico" ){
 
                 const infosKardex = {
-                    tipo: "entrada",
+                    tipo: kardexTiposEnums.Entrada,
                     nome: nome,
                     idProduto: res_produto._id,
                     valor: infos.valorVenda,
@@ -130,10 +127,11 @@ class ProdutoControlle{
                 valorCompra,
                 descontoMaximo,
                 margem,
-                quantidade 
+                quantidade ,
+                tipo
             } = req.body; 
 
-            let infos = {
+            let infos:ProdutoInterfaceUpdate = {
                 ativo,
                 nome,
                 descricao,
@@ -141,7 +139,7 @@ class ProdutoControlle{
                 descontoMaximo,
                 margem,
                 estoque:quantidade,
-                servico:false
+                tipo:tipo
             }
 
             
@@ -185,25 +183,45 @@ class ProdutoControlle{
     public async buscar(req: Request, res: Response){
         try{
 
-            let infos = { }
-            
-            if(typeof req.query != "undefined" && typeof req.query.id  != "undefined"){
-                infos._id = req.query.id
+            let infos:any = { }
+            let limit:number = 50
+            let offset:number = 0
+         
+            const query:ProductSearchParams = req.query
+
+            if(typeof query != "undefined" && typeof query.id  != "undefined"){
+                infos._id = query.id
             }
 
-            if(typeof req.query != "undefined" && typeof req.query.search  != "undefined" && req.query.search  != "undefined" && req.query.search  != ""){
+            if(typeof query != "undefined" && typeof query.search  != "undefined" && query.search  != "undefined" && query.search  != ""){
                 infos.nome ={ 
-                    $regex: new RegExp(req.query.search, 'i') // 'i' para insensibilidade a maiúsculas e minúsculas
+                    $regex: new RegExp(query.search, 'i') 
                 }
+                limit = 0
             }
 
-            if(typeof req.query != "undefined" && typeof req.query.tipo  != "undefined" && req.query.tipo  != "undefined" && req.query.tipo  != ""){
 
-                infos.tipo = req.query.tipo
+            if(typeof query != "undefined" && typeof query.tipo  != "undefined" && query.tipo  != "undefined" && query.tipo  != ""){
+
+                infos.tipo = query.tipo
+
+            }
+            
+            if(typeof query != "undefined" && typeof  query.limit  != "undefined" ){
+
+                limit = query.limit
 
             }
 
-            const produtos = await ProdutoModel.buscar(infos)
+            if(typeof query != "undefined" && typeof  query.offset  != "undefined" ){
+
+                offset = query.offset
+
+            }
+
+            
+
+            const produtos = await ProdutoModel.buscar(infos, limit, offset)
            
             return ReturnSucesso(res,produtos)
         }catch(e){

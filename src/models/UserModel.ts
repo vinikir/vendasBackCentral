@@ -49,6 +49,18 @@ class UserModel {
             
         }
     }
+
+    public async atualizar(id:string, infos:object){
+        try{
+            return await UsersShema.updateOne({_id:id}, infos, { new: true })
+
+        }catch(e){
+
+            console.log(e)
+            throw e.message
+            
+        }
+    }
 }
 
 export default new UserModel()

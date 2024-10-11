@@ -3,10 +3,12 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-console.log("server aberto on *:"+process.env.APP_PORT)
+
+var port = process.env.APP_PORT || 80;
+
+console.log("server aberto on *:"+port)
 
 
-var port = process.env.PORT || 80;
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

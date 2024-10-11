@@ -6,12 +6,13 @@ import KardexModel from "../models/KardexModel";
 import { ExtrairProdutoIds, ValidaSaldoPositivo } from "../helpers/Funcoes";
 import VendaModel from "../models/VendaModel";
 import moment from "moment-timezone";
-
+import axios from 'axios';
+import { kardexTiposEnums } from "../enums/KardexTiposEnums";
 class VendaController {
 
     public async BuscarVenda(req: Request, res: Response){
         try{
-            const produtos = await VendaModel.getAll()
+            const produtos = await VendaModel.busca()
 
             return ReturnSucesso(res, produtos)
         }catch(e){
@@ -26,7 +27,7 @@ class VendaController {
         try{
 
 
-            const { userId, tipoVenda,  produtos, user, status, pagamento} = req.body
+            const { userId, tipoVenda,  produtos, user, status, pagamento, valor} = req.body
 
             const produtosIds = ExtrairProdutoIds(produtos)
 
@@ -50,7 +51,9 @@ class VendaController {
                 tipoVenda,
                 produtos,
                 status,
-                pagamento
+                pagamento,
+                data: moment().tz("America/Sao_Paulo").format(),
+                valor: valor
             }
 
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)
@@ -79,7 +82,7 @@ class VendaController {
                 await ProdutoModel.atualizar(produto._id, {estoque:novoSaldo })
 
                 let infosKardex = {
-                    tipo: "venda",
+                    tipo: kardexTiposEnums.Venda,
                     nome: produto.nome,
                     idProduto: produto._id,
                     valor: produtoVendidoEncontrado[0].valorTotal,
@@ -102,6 +105,57 @@ class VendaController {
         }
 
     }
+
+    public async freteCorreios (req: Request, res: Response): Promise<{ preco: number; prazoEntrega: number } >{
+        try{
+            const codigoDeAcessoCorreios = "bSfidQaao5MVfmlxhzp49uq7xq0eXhNYymSMEnkS"
+            const cepOrigem: string = "06386670"
+            const cepDestino: string = "05379000"
+            const peso: number = 0.5
+            const comprimento: number = 0.20
+            const largura: number = 0.20
+            const altura: number = 0.20
+            const tipoDeFrete:string = 'SEDEX'
+
+            const usuario = "55744795000134"
+            const senha = "bSfidQaao5MVfmlxhzp49uq7xq0eXhNYymSMEnkS"
+
+            const urlCorreio = "https://api.correios.com.br/token/v1/autentica"
+
+            const  res_toke = await axios.post(urlCorreio+'/cartaopostagem',{},{
+                headers: {
+                    Authorization: `Basic ${Buffer.from(`${usuario}:${senha}`).toString('base64')}`,
+                },    
+            }).catch((er) => {
+                console.log(er)
+            })
+            const token:string = res_toke.data.token
+            console.log(res_toke)
+
+            const params = {
+                "nCdServico": '40045', // Códigos dos serviços PAC e SEDEX
+                "sCepOrigem": cepOrigem,
+                "sCepDestino": cepDestino,
+                "nVlPeso": peso,
+                "nVlComprimento": comprimento,
+                "nVlAltura": altura,
+                "nVlLargura": largura,
+                "nCdFormato": 1, // Formato do objeto (1 para caixa)
+                "nVlDiametro": 0, // Diâmetro para cilindros (se aplicável)
+                "sCdMaoPropria": 'N', // Se é mão própria (opcional)
+                "sCdAvisoRecebimento": 'N', // Se é aviso de recebimento (opcional)
+            };
+            return ReturnSucesso(res, "ok")
+            
+        }catch(e){
+
+            return ReturnErroCatch(res, e.message)
+
+        }
+    }
+
+    
+    
 
 
 }

@@ -13,3 +13,12 @@ export interface ValidarLoginInterface{
     permitido:boolean;
     msg:string
 }
+
+export interface ProductSearchParams{
+    limit?: number;  
+    offset?: number;  
+    search?: string;
+    tipo?: string;
+    id?: string;
+}
+
