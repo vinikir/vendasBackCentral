@@ -38,6 +38,10 @@ const erros = {
         "msg": "O tipo do produto é invalido",
         "codHttp": 400,
     },
+    9:{
+        "msg": "O id do funcionario é obrigatoiro",
+        "codHttp": 400,
+    },
 }
 
 export const ReturnSucesso = (res:Response, valor:any) => {
