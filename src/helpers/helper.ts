@@ -58,6 +58,14 @@ const erros = {
         "msg": `Categoria inválida informada. As categorias disponíveis são: Motor, Suspensao, Roda, Carenagem, Acessorio, Eletronico, Cabo, Eletrica, Pneu e Freio.`,
         "codHttp": 400,
     },
+    14:{
+        "msg": "Nenhum arquivo foi enviado.",
+        "codHttp": 400,
+    },
+    15:{
+        "msg": "Produto não encontrado.",
+        "codHttp": 400,
+    },
 }
 
 

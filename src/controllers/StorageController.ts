@@ -7,7 +7,7 @@ const s3Client = new S3Client({
     region: process.env.AWS_REGION,
 });
 
-const uploadImageToS3 = async (fileBuffer: Buffer, bucketName: string, key: string, mimeType: string) => {
+export const uploadImageToS3 = async (fileBuffer: Buffer, bucketName: string, key: string, mimeType: string) => {
     try {
         const uploadParams = {
             Bucket: bucketName,

@@ -24,6 +24,90 @@ class ProdutoControlle{
         );
     }
 
+    public async entrada(req: Request, res: Response) :  Promise<object>{
+        try{
+            const {  
+                id,
+                valorCompra,
+                valorVenda,
+                descontoMaximo,
+                margem,
+               observacao
+            }:ProdutoInterface = req.body; 
+
+            const quantidade:number | undefined =  req.body.quantidade
+            const avgValor:boolean | undefined =  req.body.avgValor
+
+            let infos = {
+                id,
+                valorCompra,
+                valorVenda,
+                descontoMaximo,
+                margem,
+                estoque:quantidade,
+            }
+
+            let res_Busca = await ProdutoModel.buscarPorId(id)
+
+            if(res_Busca.length <= 0){
+                return ReturnErroPadrao(res, 15 )
+            }
+
+            let produto:ProdutoInterface = res_Busca[0]
+            let tipo = produto.tipo
+            let quantidadeAtual = produto.estoque
+            infos.estoque= parseInt(infos.estoque) + parseInt(quantidadeAtual)
+            
+           
+            if(typeof avgValor != "undefined" && avgValor == true && infos.estoque > 0 ){
+
+                const valoresAntigos = produto.valorVenda * produto.estoque
+                const valorVendaNovo = valorVenda * quantidade
+                const valoresSomados = valoresAntigos + valorVendaNovo
+
+
+                let avg = valoresSomados/ infos.estoque 
+                infos.valorVenda = avg.toFixed(2)
+
+            }
+            
+            if(typeof margem == "undefined" && tipo == "venda"){
+                infos.margem = 20
+            }
+
+            if( margem < 10 && tipo == "venda"){
+                return ReturnErroPadrao(res, 3 )
+            }
+
+
+          
+            const res_produto = await ProdutoModel.atualizar(id, infos)
+
+            if(tipo != "servico" ){
+
+                const infosKardex = {
+                    tipo: kardexTiposEnums.Entrada,
+                    nome: produto.nome,
+                    idProduto: id,
+                    valor: infos.valorVenda,
+                    data: moment().tz("America/Sao_Paulo").format(),
+                    qtd:quantidade
+                }
+    
+                await KardexModel.salvar(infosKardex)
+
+            }
+
+            return ReturnSucesso(res,res_produto)
+
+        }catch(e){
+            console.log("e",e)
+            return ReturnErroCatch(res, e.message)
+
+        }
+
+    }
+
     public async salvar(req: Request, res: Response):  Promise<object>{
         try{
 
@@ -43,7 +127,8 @@ class ProdutoControlle{
                 observacao,
                 categoria,
                 imgAdicional,
-                img
+                img,
+                valorVenda
             }:ProdutoInterface = req.body; 
 
             const quantidade:number | string =  req.body.quantidade
@@ -61,7 +146,8 @@ class ProdutoControlle{
                 sku,
                 codigoBarra,
                 aplicacao,
-                observacao
+                observacao,
+                valorVenda
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){
@@ -122,15 +208,15 @@ class ProdutoControlle{
 
             }
             
-            if(tipo == "venda" ){
+            // if(tipo == "venda" ){
 
-                infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
+            //     infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
 
-            }else{
+            // }else{
 
-                infos.valorVenda = valorCompra
+            //     infos.valorVenda = valorCompra
 
-            }
+            // }
             
 
             const res_produto = await ProdutoModel.salvar(infos)
