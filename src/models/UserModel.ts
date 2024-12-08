@@ -76,6 +76,22 @@ class UserModel {
 
     }
 
+    public async buscaVendedor(){
+
+        try{
+          
+            return await UsersShema.find({ $or: [ { tipo:"socio" } , {tipo:"funcionario"} ] },{nome:1,_id:1}).sort({'nome':1})
+
+        }catch(e){
+            
+            throw e.message
+            
+        }
+
+    }
+
+    
+
     
 }
 

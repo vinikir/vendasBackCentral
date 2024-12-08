@@ -28,6 +28,8 @@ routes.get('/e',UserController.buscarTodos)
 routes.post('/user',UserController.create.bind(UserController))	
 routes.post('/login',UserController.login)	
 routes.post('/trocar-senha',UserController.trocarSenha )
+routes.get('/vendedor-listar', UserController.listarVendedor)
+
 routes.post('/orcamento/salvar', OrcamentoController.salvar)
 routes.post('/orcamentos', OrcamentoController.buscar)
 routes.get('/user-buscar',UserController.buscar.bind(UserController))
@@ -54,6 +56,7 @@ routes.post('/ordem-servico/salvar',upload.any(), OrdemServicoController.salvar)
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 routes.post('/versao/update', upload.any(), VersoesAppController.upLoadNovaVersao)
 routes.post('/verifica-update', VersoesAppController.verificaUpdate)
+
 
 
 

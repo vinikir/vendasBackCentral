@@ -284,6 +284,17 @@ class UserControlle{
         }
     }
 
+    public async listarVendedor(req: Request, res: Response){
+        try{
+
+            const res_buscaVendedor = await UserModel.buscaVendedor()
+            return ReturnSucesso(res, res_buscaVendedor)
+        }catch(e){
+            console.error(e.stack);
+            return ReturnErroCatch(res, e.message)
+        }
+    }
+
 
 }
 
