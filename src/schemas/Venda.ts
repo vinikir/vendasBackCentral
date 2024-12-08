@@ -9,6 +9,7 @@ interface VendaInterface extends Document {
     status:String;
     pagamento:Array<object>
     valor:Number
+    clienteId:String
 }
 
 export const VendaSchema = new Schema({
@@ -20,7 +21,8 @@ export const VendaSchema = new Schema({
     vendaId:Number,
     status:String,
     pagamento:Array,
-    valor:Number
+    valor:Number,
+    clienteId:String
 }, {
     timestamps: true
 })

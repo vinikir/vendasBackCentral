@@ -34,6 +34,19 @@ class ProdutoModel {
         }
     }
 
+    public async buscarPorId(id:string) {
+        try{
+            
+            return await ProdutoShema.find({_id:id})
+
+        }catch(e){
+
+            console.log(e)
+            throw new Error(e.message);
+
+        }
+    }
+
     
     public async atualizar(id:string, infos:object){
         try{

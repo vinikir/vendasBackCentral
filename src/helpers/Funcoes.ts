@@ -109,3 +109,27 @@ export const ValidaSaldoPositivo = (produtosVenda: Array<object>, produtosEstoqu
     
     };
 }
+
+
+export const ajustarPesquisaParaBuscaLike = (search:string):String => {
+
+    if (search.includes('%')) {
+        
+        if(search.startsWith('%') && search.endsWith('%') ){
+            return new RegExp(search, 'i');
+        }
+
+        if (search.startsWith('%')) {
+            search = search.replace(/^%/, '');
+            search = search+"$"
+        }
+        
+        if (search.endsWith('%')) {
+            search = search.replace(/%$/, '');
+            search = "^"+search
+        }
+        
+    }
+      
+    return new RegExp(search, 'i');
+}

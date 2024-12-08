@@ -8,7 +8,7 @@ export interface OrcamentoInterface extends Document {
     data:String;
     orcamentoId:Number;
     status:String;
-    
+    clienteId:String
 }
 
 export const OrcamentoSchema = new Schema({
@@ -19,6 +19,7 @@ export const OrcamentoSchema = new Schema({
     data:String,
     orcamentoId:Number,
     status:String,
+    clienteId:String
 }, {
     timestamps: true
 })

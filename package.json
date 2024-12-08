@@ -38,6 +38,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
+    "mercadopago": "^2.0.15",
     "moment-timezone": "^0.5.45",
     "mongoose": "^8.4.3",
     "mongoose-auto-increment": "^5.0.1",

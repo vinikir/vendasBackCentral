@@ -6,6 +6,8 @@ import moment from "moment-timezone";
 import { ProductSearchParams } from "../interfaces/Interface";
 import { ProdutoInterface, ProdutoInterfaceUpdate } from "../schemas/Produto";
 import { kardexTiposEnums } from "../enums/KardexTiposEnums";
+import { CategoriaProdutosEnums } from "../enums/CategoriaProdutosEnums";
+import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
 class ProdutoControlle{
 
     private calculavalorVenda (custo, margem){
@@ -16,10 +18,100 @@ class ProdutoControlle{
         return parseFloat(valorVenda.toFixed(2));
     }
 
+    private validarCategorias(categorias: Array<string>): boolean {
+        return categorias.every((categoria:string) =>
+          Object.values(CategoriaProdutosEnums).includes(categoria.toLowerCase())
+        );
+    }
+
+    public async entrada(req: Request, res: Response) :  Promise<object>{
+        try{
+            const {  
+                id,
+                valorCompra,
+                valorVenda,
+                descontoMaximo,
+                margem,
+               observacao
+            }:ProdutoInterface = req.body; 
+
+            const quantidade:number | undefined =  req.body.quantidade
+            const avgValor:boolean | undefined =  req.body.avgValor
+
+            let infos = {
+                id,
+                valorCompra,
+                valorVenda,
+                descontoMaximo,
+                margem,
+                estoque:quantidade,
+            }
+
+            let res_Busca = await ProdutoModel.buscarPorId(id)
+
+            if(res_Busca.length <= 0){
+                return ReturnErroPadrao(res, 15 )
+            }
+
+            let produto:ProdutoInterface = res_Busca[0]
+            let tipo = produto.tipo
+            let quantidadeAtual = produto.estoque
+            infos.estoque= parseInt(infos.estoque) + parseInt(quantidadeAtual)
+            
+           
+            if(typeof avgValor != "undefined" && avgValor == true && infos.estoque > 0 ){
+
+                const valoresAntigos = produto.valorVenda * produto.estoque
+                const valorVendaNovo = valorVenda * quantidade
+                const valoresSomados = valoresAntigos + valorVendaNovo
+
+
+                let avg = valoresSomados/ infos.estoque 
+                infos.valorVenda = avg.toFixed(2)
+
+            }
+            
+            if(typeof margem == "undefined" && tipo == "venda"){
+                infos.margem = 20
+            }
+
+            if( margem < 10 && tipo == "venda"){
+                return ReturnErroPadrao(res, 3 )
+            }
+
+
+          
+            const res_produto = await ProdutoModel.atualizar(id, infos)
+
+            if(tipo != "servico" ){
+
+                const infosKardex = {
+                    tipo: kardexTiposEnums.Entrada,
+                    nome: produto.nome,
+                    idProduto: id,
+                    valor: infos.valorVenda,
+                    data: moment().tz("America/Sao_Paulo").format(),
+                    qtd:quantidade
+                }
+    
+                await KardexModel.salvar(infosKardex)
+
+            }
+
+            return ReturnSucesso(res,res_produto)
+
+        }catch(e){
+            console.log("e",e)
+            return ReturnErroCatch(res, e.message)
+
+        }
+
+    }
+
     public async salvar(req: Request, res: Response):  Promise<object>{
         try{
 
-        
+            
             const {  
                 ativo,
                 nome,
@@ -32,7 +124,11 @@ class ProdutoControlle{
                 sku,
                 codigoBarra,
                 aplicacao,
-                observacao
+                observacao,
+                categoria,
+                imgAdicional,
+                img,
+                valorVenda
             }:ProdutoInterface = req.body; 
 
             const quantidade:number | string =  req.body.quantidade
@@ -50,7 +146,8 @@ class ProdutoControlle{
                 sku,
                 codigoBarra,
                 aplicacao,
-                observacao
+                observacao,
+                valorVenda
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){
@@ -70,23 +167,56 @@ class ProdutoControlle{
                 infos.ativo = true
             }
 
+            if(typeof img != "undefined"){
+                infos.img = img
+            }
+
+            if(typeof imgAdicional != "undefined"){
+                infos.imgAdicional = imgAdicional
+            }
+
             if( ( typeof quantidade == "undefined" || quantidade == "" ) && tipo != "servico" ){
                 return ReturnErroPadrao(res, 3 )
             } 
 
-            if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
-                infos.estoque = 0
+           
+            if(tipo == "venda"){
+
+                if( ( typeof categoria == "undefined" ) ){
+                    return ReturnErroPadrao(res, 10 )
+                } 
+    
+                if(typeof categoria != "object" ){
+                    return ReturnErroPadrao(res, 11 )
+                }
+    
+                if( categoria.length <= 0 ){
+                    return ReturnErroPadrao(res, 12 )
+                }
+    
+                if(this.validarCategorias(categoria) == false){
+                    return ReturnErroPadrao(res, 13 )
+                }
+
+                infos.categoria = categoria.map(str => str.toLowerCase());
             }
             
-            if(tipo == "venda" ){
 
-                infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
+            if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
 
-            }else{
-
-                infos.valorVenda = valorCompra
+                infos.estoque = 0
 
             }
+            
+            // if(tipo == "venda" ){
+
+            //     infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
+
+            // }else{
+
+            //     infos.valorVenda = valorCompra
+
+            // }
             
 
             const res_produto = await ProdutoModel.salvar(infos)
@@ -110,7 +240,7 @@ class ProdutoControlle{
             return ReturnSucesso(res,res_produto)
 
         }catch(e){
-
+            console.log("e",e)
             return ReturnErroCatch(res, e.message)
 
         }
@@ -194,8 +324,9 @@ class ProdutoControlle{
             }
 
             if(typeof query != "undefined" && typeof query.search  != "undefined" && query.search  != "undefined" && query.search  != ""){
+                query.search = ajustarPesquisaParaBuscaLike(query.search)
                 infos.nome ={ 
-                    $regex: new RegExp(query.search, 'i') 
+                    $regex: query.search
                 }
                 limit = 0
             }
