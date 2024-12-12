@@ -96,7 +96,7 @@ class VendaController {
 
             }
 
-            return ReturnSucesso(res, "ok")
+            return ReturnSucesso(res, res_salvarVenda)
 
         }catch(e){
 
