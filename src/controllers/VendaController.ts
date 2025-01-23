@@ -12,7 +12,10 @@ class VendaController {
 
     public async BuscarVenda(req: Request, res: Response){
         try{
-            const produtos = await VendaModel.busca()
+
+            const {inicial, final} = req.query
+
+            const produtos = await VendaModel.busca(inicial, final)
 
             return ReturnSucesso(res, produtos)
         }catch(e){
