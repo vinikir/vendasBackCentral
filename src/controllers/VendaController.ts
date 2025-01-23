@@ -12,7 +12,7 @@ class VendaController {
 
     public async BuscarVenda(req: Request, res: Response){
         try{
-
+            
             const {inicial, final} = req.query
 
             const produtos = await VendaModel.busca(inicial, final)
