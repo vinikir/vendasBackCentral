@@ -3,6 +3,8 @@ import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../
 import InvestimentoModel from "../models/InvestimentoModel";
 import moment  from "moment-timezone";
 import VendaModel from '../models/VendaModel'
+
+
 class FinanceiroController {
 
     public async EntradaInvestimento (req: Request, res: Response) {
@@ -36,6 +38,8 @@ class FinanceiroController {
         
 
     }
+
+    
 
     public async SaidaInvestimentoMercadoria(req: Request, res: Response) {
         try{
@@ -94,18 +98,29 @@ class FinanceiroController {
 
     public async BuscaCaixa (req: Request, res: Response) {
         try{
-            let retono = []
-            const investimentos = await InvestimentoModel.busca()
+
+            const {inicial, final} = req.query
+
+            let retono:Array<object> = []
+            
+            const investimentos = await InvestimentoModel.busca(inicial, final)
+            
+
             for (let index = 0; index < investimentos.length; index++) {
                 const investimento = investimentos[index];
+                
                 retono.push({
-                    data:investimento.dataMovimentacao,
+                    data:moment(investimento.dataMovimentacao).format("DD/MM/YYYY"),
                     valor:investimento.valor,
                     tipo:investimento.tipo,
                     informacoes:investimento.informacoes ? investimento.informacoes: investimento.socio ,
                 })
             }
-            const vendas = await VendaModel.busca()
+
+
+            const vendas = await VendaModel.busca(inicial, final)
+
+            
             for (let index = 0; index < vendas.length; index++) {
                 const venda = vendas[index];
                 retono.push({

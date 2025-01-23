@@ -111,7 +111,7 @@ export const ValidaSaldoPositivo = (produtosVenda: Array<object>, produtosEstoqu
 }
 
 
-export const ajustarPesquisaParaBuscaLike = (search:string):String => {
+export const ajustarPesquisaParaBuscaLike_old = (search:string):String => {
 
     if (search.includes('%')) {
         
@@ -133,3 +133,45 @@ export const ajustarPesquisaParaBuscaLike = (search:string):String => {
       
     return new RegExp(search, 'i');
 }
+
+export const ajustarPesquisaParaBuscaLike = (search: string): any => {
+    if (search.includes('#')) {
+        // Dividir a string em termos usando o delimitador `#`
+        const terms = search.split('#');
+        
+        // Mapear cada termo para uma expressão regular
+        const regexArray = terms.map(term => {
+            // Se o termo começar ou terminar com `%`, ajusta como na lógica anterior
+            if (term.startsWith('%') && term.endsWith('%')) {
+                return new RegExp(term.slice(1, -1), 'i');
+            }
+            if (term.startsWith('%')) {
+                return new RegExp(term.slice(1) + '$', 'i');
+            }
+            if (term.endsWith('%')) {
+                return new RegExp('^' + term.slice(0, -1), 'i');
+            }
+            return new RegExp(term, 'i'); // Termo sem `%`
+        });
+
+        // Retorna a estrutura de busca para `$and`
+        return { $and: regexArray.map(regex => ({ nome: { $regex: regex } })) };
+    }
+
+    // Caso não tenha `#`, usa a lógica padrão
+    if (search.includes('%')) {
+        if (search.startsWith('%') && search.endsWith('%')) {
+            return new RegExp(search.slice(1, -1), 'i');
+        }
+        if (search.startsWith('%')) {
+            search = search.replace(/^%/, '');
+            search = search + "$";
+        }
+        if (search.endsWith('%')) {
+            search = search.replace(/%$/, '');
+            search = "^" + search;
+        }
+    }
+
+    return new RegExp(search, 'i');
+};

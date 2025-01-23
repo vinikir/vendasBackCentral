@@ -6,7 +6,7 @@ interface InvestimentoInterface extends Document {
     tipo: String,
     valor: Number,
     dataSalvou: String,
-    dataMovimentacao: String,
+    dataMovimentacao: Date,
     informacoes:String,
     socio:String
 }
@@ -16,7 +16,7 @@ export const InvestimentoSchema = new Schema({
     tipo: String,
     valor: Number,
     dataSalvou: String,
-    dataMovimentacao: String,
+    dataMovimentacao: Date,
     informacoes:String,
     socio:String
 }, {
