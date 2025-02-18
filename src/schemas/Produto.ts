@@ -20,6 +20,7 @@ export interface ProdutoInterface extends Document {
     img?:String | undefined,
     imgAdicional?:Array<string>,
     categoria?:Array<string>
+    grupo:String
 }
 
 export interface ProdutoInterfaceUpdate extends Document {
@@ -39,7 +40,8 @@ export interface ProdutoInterfaceUpdate extends Document {
     observacao?:String,
     img?:String,
     imgAdicional?:Array<string>,
-    categoria?:Array<string>
+    categoria?:Array<string>,
+    grupo:String
 }
 
 export const ProdutoSchema = new Schema({
@@ -59,7 +61,8 @@ export const ProdutoSchema = new Schema({
     observacao:String,
     img:String,
     imgAdicional:Array,
-    categoria:Array
+    categoria:Array,
+    grupo:String
 
 }, {
     timestamps: true

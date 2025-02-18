@@ -9,6 +9,7 @@ import OrdemServicoController from '../controllers/OrdemServicoController'
 import StorageController from '../controllers/StorageController'
 import multer from 'multer'
 import VersoesAppController from '../controllers/VersoesAppController'
+import GrupoProdutosController from '../controllers/GrupoProdutosController'
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
@@ -41,6 +42,9 @@ routes.post('/produto/entrada',ProdutoController.entrada.bind(ProdutoController)
 routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	
 
 routes.get('/produtos',ProdutoController.buscar)
+
+routes.get('/grupoprodutos',GrupoProdutosController.buscar)
+
 
 routes.post('/investimento-salvar',FinanceiroController.EntradaInvestimento )
 routes.post('/investimento-saida-compra',FinanceiroController.SaidaInvestimentoMercadoria )

@@ -8,6 +8,7 @@ import { ProdutoInterface, ProdutoInterfaceUpdate } from "../schemas/Produto";
 import { kardexTiposEnums } from "../enums/KardexTiposEnums";
 import { CategoriaProdutosEnums } from "../enums/CategoriaProdutosEnums";
 import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
+import GrupoProdutosModel from "../models/GrupoProdutosModel";
 class ProdutoControlle{
 
     private calculavalorVenda (custo, margem){
@@ -128,7 +129,8 @@ class ProdutoControlle{
                 categoria,
                 imgAdicional,
                 img,
-                valorVenda
+                valorVenda,
+                grupo
             }:ProdutoInterface = req.body; 
 
             const quantidade:number | string =  req.body.quantidade
@@ -147,7 +149,8 @@ class ProdutoControlle{
                 codigoBarra,
                 aplicacao,
                 observacao,
-                valorVenda
+                valorVenda,
+                grupo
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){
@@ -218,7 +221,7 @@ class ProdutoControlle{
 
             // }
             
-
+            
             const res_produto = await ProdutoModel.salvar(infos)
             
             if(tipo != "servico" ){
@@ -234,6 +237,10 @@ class ProdutoControlle{
     
                 await KardexModel.salvar(infosKardex)
 
+            }
+
+            if(typeof grupo != "undefined"){
+                GrupoProdutosModel.salvar(grupo)
             }
             
 
