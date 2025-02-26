@@ -117,7 +117,6 @@ class VendaController {
 
                     FaturadoModel.salvar(infosFaturado)
                     
-                    
                 }
             }
 
