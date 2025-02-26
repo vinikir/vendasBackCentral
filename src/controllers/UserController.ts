@@ -4,10 +4,11 @@ import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../
 import bcrypt from 'bcrypt'
 import UserModel from "../models/UserModel";
 import dotenv from 'dotenv'
-import { UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
+import {  UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
 import { ValidarCpfCnpj } from "../helpers/Funcoes";
 import { UserSearchParams } from "../interfaces/Interface";
 import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
+import { TipoUsuariosEnums } from "../enums/TipoUsuariosEnums";
 class UserControlle{
 
     public async buscarTodos(req: Request, res: Response) : Promise<object>{
@@ -45,6 +46,10 @@ class UserControlle{
 
             if(typeof query != "undefined" && typeof query.id  != "undefined"){
                 infos._id = query.id
+            }
+
+            if(typeof query != "undefined" && typeof query.tipo  != "undefined"){
+                infos.tipo = query.tipo
             }
 
            
@@ -95,54 +100,137 @@ class UserControlle{
         }
     }
 
+    public async buscarClientes(req: Request, res: Response): Promise<object>{
+        try{
+
+            let infos:any = {
+                "tipo":"cliente"
+            }
+            let limit:number = 50
+            let offset:number = 0
+         
+            const query:UserSearchParams = req.query
+
+            if(typeof query != "undefined" && typeof query.id  != "undefined"){
+                infos._id = query.id
+            }
+
+           
+            if(typeof query != "undefined" && typeof query.search  != "undefined" && query.search  != "undefined" && query.search  != ""){
+
+                query.search = ajustarPesquisaParaBuscaLike(query.search)
+                console.log(isNaN(query.search))
+                if(isNaN(query.search)){
+                    infos.cpfCnpj ={ 
+                        $regex: new RegExp(query.search, 'i') 
+                    }
+                }else{
+
+                    infos.nome ={ 
+                        $regex: new RegExp(query.search, 'i') 
+                    }
+                }
+                
+            }
+            
+            if(typeof query != "undefined" && typeof  query.limit  != "undefined" ){
+
+                limit = query.limit
+
+            }
+
+            if(typeof query != "undefined" && typeof  query.offset  != "undefined" ){
+
+                offset = query.offset
+
+            }
+
+            
+
+            let usuario = await UserModel.buscar(infos, limit, offset)
+
+           
+
+            for (let index = 0; index < usuario.length; index++) {
+                const element = usuario[index];
+                usuario[index].cpfCnpj =  this.aplicarMascaraCpfCnpj(element.cpfCnpj) 
+            }
+           
+            return ReturnSucesso(res,usuario)
+
+        }catch(e){
+            return ReturnErroCatch(res, e.message)
+        }
+    }
+
     public async create(req: Request, res: Response) : Promise<object>{
         try{
             
             const { ativo, nome, login, senha, cpfCnpj, tipo }: UserInterface = req.body; 
-                
-            if(typeof senha == "undefined" || senha == ''){
+              
+            if(( typeof senha == "undefined" || senha == '' ) &&  ( tipo == TipoUsuariosEnums.funcionario || tipo == TipoUsuariosEnums.socio ) ){
                 return ReturnErroPadrao( res, 0)
             }
 
-            if(typeof cpfCnpj == "undefined" || cpfCnpj == ''){
+            if( ( typeof cpfCnpj == "undefined" || cpfCnpj == '' ) &&  ( tipo == TipoUsuariosEnums.funcionario || tipo == TipoUsuariosEnums.socio )  ){
+
                 return ReturnErroPadrao( res, 6)
+
             }
 
-            if(typeof tipo == "undefined" || tipo == ''){
+            if( typeof tipo == "undefined" || tipo == ''){
+
                 return ReturnErroPadrao( res, 7)
+
             }
-            
             
             const resValidaCnpj = ValidarCpfCnpj(cpfCnpj)
-
+            
             if(resValidaCnpj.valido == false){
+
                 return ReturnErro(res,resValidaCnpj.tipo, 998 )
+
             }
 
             const cpfCnpjLimpo = resValidaCnpj.valor
-            
 
-            const permitidoCadastro:ValidarLoginInterface = await this.validaLogin( login, res)
-            
-            if(!permitidoCadastro.permitido){
+            const resValidaCnpjCadastrado = await UserModel.validaCpfCnpjCadastrado( cpfCnpjLimpo )
 
-                return ReturnErro(res,permitidoCadastro.msg, 500)
+            if(resValidaCnpjCadastrado.length > 0){
+
+                return ReturnErroPadrao( res, 18)
 
             }
+          
 
-            
-         
-            const hashPassword = await bcrypt.hash(senha, 8)
-           
             let user:UserInterface = {
                 ativo: true,
                 nome, 
-                login, 
-                senha: hashPassword, 
                 cpfCnpj:cpfCnpjLimpo,
                 tipo:tipo
             }
+            
+            if( tipo == TipoUsuariosEnums.funcionario ||  tipo ==  TipoUsuariosEnums.socio ){
 
+                if(typeof login == "undefined"){
+
+                    return ReturnErroPadrao(res, 17 )
+
+                }
+
+                const permitidoCadastro:ValidarLoginInterface  = await this.validaLogin( login )
+
+                
+                if(!permitidoCadastro.permitido){
+    
+                    return ReturnErro(res,permitidoCadastro.msg, 500)
+    
+                }
+                const hashPassword =  await bcrypt.hash( senha, 8)
+                user.login = login
+                user.senha = hashPassword
+
+            }
 
             if(typeof ativo != "undefined"){
                 user.ativo = ativo
@@ -192,12 +280,14 @@ class UserControlle{
         }
     }
 
-    private async validaLogin( login:string, res:Response) {
+    private async validaLogin( login:string ):Promise<ValidarLoginInterface> {
         try{
-
+            
             const res_login:UserInterface = await UserModel.findLogin(login)
-           
-            if(typeof res_login != "undefined" && res_login.length > 0 || res_login.login){
+
+            
+
+            if( ( typeof res_login != "undefined" && res_login.length > 0 ) || res_login.login){
                 return {
                     permitido:false,
                     msg:"Login já cadastrado"
@@ -211,14 +301,14 @@ class UserControlle{
 
         }catch(e){
 
-            return ReturnErroCatch(res, e.message)
+            throw new Error(e.message)
 
         }
         
 
     }
 
-    public async login(req: Request, res: Response):  Promise<Response>{
+    public async login(req: Request, res: Response):  Promise<Response> {
 
         try{
             
@@ -279,18 +369,19 @@ class UserControlle{
             return ReturnSucesso(res, sucess)
             
         }catch(e){
-            console.error(e.stack);
+            
             return ReturnErroCatch(res, e.message)
         }
     }
 
-    public async listarVendedor(req: Request, res: Response){
+    public async listarVendedor(req: Request, res: Response):Promise<Response>{
         try{
 
             const res_buscaVendedor = await UserModel.buscaVendedor()
             return ReturnSucesso(res, res_buscaVendedor)
+
         }catch(e){
-            console.error(e.stack);
+            
             return ReturnErroCatch(res, e.message)
         }
     }

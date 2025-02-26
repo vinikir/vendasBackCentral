@@ -1,13 +1,13 @@
 import { Schema, model, Document } from "mongoose";
 
 interface User extends Document {
-    ativo: Boolean;
-    nome:String;
-    login:String;
-    senha:String;
-    permisoes:Array<string>;
-    tipo:String;
-    cpfCnpj:String;
+    ativo: boolean;
+    nome:string;
+    login?:string;
+    senha?:string;
+    permisoes?:Array<string>;
+    tipo:string;
+    cpfCnpj:string;
 
 }
 
@@ -26,5 +26,7 @@ export const UserSchema = new Schema({
 })
 
 UserSchema.index({ login: 1 }, { unique: true });
+UserSchema.index({ cpfCnpj: 1 }, { unique: true });
+
 
 export default model<User>('user',UserSchema)

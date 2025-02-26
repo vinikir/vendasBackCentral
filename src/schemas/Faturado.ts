@@ -1,24 +1,23 @@
 import { Schema, model, Document } from "mongoose";
-interface VendaInterface extends Document {
+
+interface FaturadoInterface extends Document {
     user:string;
     userId: string;
-    tipoVenda:string;
-    produtos:Array<object>;
     data:string;
-    vendaId:number;
+    vendaId:string;
+    faturamentoId:number;
     status:string;
     pagamento:Array<object>
     valor:number
     clienteId:string
 }
 
-export const VendaSchema = new Schema({
+export const FaturadoSchema = new Schema({
     user:String,
     userId: String,
-    tipoVenda:String,
-    produtos:Array,
     data:String,
-    vendaId:Number,
+    vendaId:String,
+    faturamentoId:Number,
     status:String,
     pagamento:Array,
     valor:Number,
@@ -26,9 +25,9 @@ export const VendaSchema = new Schema({
 }, {
     timestamps: true
 })
-VendaSchema.index({ vendaId: -1},{ unique:true });
-VendaSchema.index({ userId: 1});
+FaturadoSchema.index({ vendaId: -1},{ unique:true });
+FaturadoSchema.index({ userId: 1});
 
 
 
-export default model<VendaInterface>('venda',VendaSchema)
+export default model<FaturadoInterface>('faturado',FaturadoSchema)

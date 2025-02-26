@@ -8,6 +8,7 @@ import OrcamentoModel from "../models/OrcamentoModel";
 import moment from "moment-timezone";
 
 class OrcamentoController {
+    
     public async salvar (req: Request, res: Response) {
 
         try{
@@ -21,7 +22,7 @@ class OrcamentoController {
                 _id:{ "$in" :produtosIds}
             }
 
-            const produtosBuscaPorId = await ProdutoModel.buscar(buscaProdutoQury, 50)
+            const produtosBuscaPorId = await ProdutoModel.buscar(buscaProdutoQury)
 
             const res_ValidaSaldoPositivo = ValidaSaldoPositivo( produtos, produtosBuscaPorId )
 

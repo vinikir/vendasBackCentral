@@ -1,14 +1,14 @@
 import { Schema, model, Document } from "mongoose";
 
 interface KardexInterface extends Document {
-    tipo: String,
-    nome: String,
-    idProduto: String,
-    valor: Number,
-    data: String,
-    observasao:String,
-    qtd:Number,
-    vendaId:String
+    tipo: string,
+    nome: string,
+    idProduto: string,
+    valor: number,
+    data: string,
+    observasao:string,
+    qtd:number,
+    vendaId:string
 }
 
 export const KardexSchema = new Schema({

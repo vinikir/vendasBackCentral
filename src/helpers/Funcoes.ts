@@ -1,4 +1,4 @@
-export const ValidarCpfCnpj = (valor: string): { valido: boolean; tipo: String, valor: String  } => {
+export const ValidarCpfCnpj = (valor: String): { valido: boolean; tipo: string, valor: string  } => {
     // Remove caracteres especiais e espaços
     const valorLimpo = valor.replace(/[^0-9]/g, '');
 
@@ -70,6 +70,7 @@ function validarCnpj(cnpj: string): boolean {
     // Verifica se os dígitos verificadores calculados são iguais aos do CNPJ
     return digito1 === parseInt(cnpj[12]) && digito2 === parseInt(cnpj[13]);
 }
+
 
 export  const ExtrairProdutoIds = (dados: { produtoId: string }[]): string[] => {
     return dados.map(item => item.produtoId);

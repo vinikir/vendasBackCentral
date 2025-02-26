@@ -8,8 +8,9 @@ import OrcamentoController from '../controllers/OrcamentoController'
 import OrdemServicoController from '../controllers/OrdemServicoController'
 import StorageController from '../controllers/StorageController'
 import multer from 'multer'
-import VersoesAppController from '../controllers/VersoesAppController'
 import GrupoProdutosController from '../controllers/GrupoProdutosController'
+import { ReturnSucesso } from '../helpers/helper'
+import { MetodoPagamentoEnums } from '../enums/MetodoPagamentoEnums'
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
@@ -36,6 +37,7 @@ routes.get('/vendedor-listar', UserController.listarVendedor)
 routes.post('/orcamento/salvar', OrcamentoController.salvar)
 routes.post('/orcamentos', OrcamentoController.buscar)
 routes.get('/user-buscar',UserController.buscar.bind(UserController))
+
 routes.post('/produto',ProdutoController.salvar.bind(ProdutoController))	
 routes.post('/produto/entrada',ProdutoController.entrada.bind(ProdutoController))	
 
@@ -61,8 +63,6 @@ routes.get('/frete-correio',VendaController.freteCorreios )
 routes.post('/ordem-servico/salvar',upload.any(), OrdemServicoController.salvar)
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
-routes.post('/versao/update', upload.any(), VersoesAppController.upLoadNovaVersao)
-routes.post('/verifica-update', VersoesAppController.verificaUpdate)
 
 
 
@@ -71,7 +71,46 @@ routes.post('/ordem-servico/salvar', OrdemServicoController.salvar)
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 
+routes.get('metodospagamentos',  (req, res):Response => {
 
+    const ret = [
+        [
+            {
+                id: '1', 
+                label: 'Pix',
+                value: MetodoPagamentoEnums.pix,
+                
+            },
+            {
+                id: '2',
+                label: 'Dinheiro',
+                value: MetodoPagamentoEnums.dinheiro,
+               
+            },
+            {
+                id: '3',
+                label: 'Débito',
+                value: MetodoPagamentoEnums.debito,
+              
+            },
+            {
+                id: '4',
+                label: 'Crédito',
+                value: MetodoPagamentoEnums.credito,
+                
+            },
+            {
+                id: '5',
+                label: 'Faturado',
+                value: MetodoPagamentoEnums.faturado,
+               
+            }
+        ]
+    ]
+
+    return ReturnSucesso(res, ret)
+    res.send({"versao":"3 post"})
+})
 
 
 

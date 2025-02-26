@@ -1,14 +1,14 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface OrcamentoInterface extends Document {
-    user:String;
-    userId: String;
-    tipoVenda:String;
+    user:string;
+    userId: string;
+    tipoVenda:string;
     produtos:Array<object>;
-    data:String;
-    orcamentoId:Number;
-    status:String;
-    clienteId:String
+    data:string;
+    orcamentoId:number;
+    status:string;
+    clienteId:string
 }
 
 export const OrcamentoSchema = new Schema({

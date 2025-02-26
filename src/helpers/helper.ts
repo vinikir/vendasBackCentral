@@ -1,5 +1,5 @@
 import { Response } from "express";
-
+import { ErrorInterface } from "../interfaces/Interface";
 const erros = {
     0:{
         "msg":"A senha é obrigatória.",
@@ -66,17 +66,29 @@ const erros = {
         "msg": "Produto não encontrado.",
         "codHttp": 400,
     },
+    16:{
+        "msg": "O Cliente é obrigatorio para faturar.",
+        "codHttp": 400,
+    },
+    17:{
+        "msg": "O login é obrigatorio.",
+        "codHttp": 400,
+    },
+    18:{
+        "msg": "CPF ou CNP já cadastrado.",
+        "codHttp": 400,
+    },
 }
 
 
-export const ReturnSucesso = (res:Response, valor:any):object => {
+export const ReturnSucesso = (res:Response, valor:any):Response => {
     return res.json( {
         "erro":false,
         "valor":valor
     })
 }
 
-export const ReturnErro = (res:Response, msg :string, status:number):object => {
+export const ReturnErro = (res:Response, msg :string, status:number):Response => {
     return res.status(status).json( {
         "erro":true,
         "valor":msg,
@@ -84,7 +96,7 @@ export const ReturnErro = (res:Response, msg :string, status:number):object => {
     })
 }
 
-export const ReturnErroPadrao = (res:Response, cod:number):object => {
+export const ReturnErroPadrao = (res:Response, cod:number):Response => {
     if(!erros[cod]){
         return res.status(500).
         json({
@@ -103,11 +115,13 @@ export const ReturnErroPadrao = (res:Response, cod:number):object => {
     })
 }
 
-export const ReturnErroCatch = (res:Response,msg:string) => {
-    return res.status(500).json( {
-        "erro":true,
-        "valor":msg,
-        "codigo":9999
-    })
-}
+export const ReturnErroCatch = (res: Response, msg: string): Response => {
+    const erroResponse: ErrorInterface = {
+      erro: true,
+      valor: msg,
+      codigo: 9999,
+    };
+  
+    return res.status(500).json(erroResponse);
+};
     

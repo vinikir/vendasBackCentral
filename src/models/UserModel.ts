@@ -1,3 +1,4 @@
+import { UserInterface } from "../interfaces/Interface"
 import UsersShema from "../schemas/Users"
 
 class UserModel {
@@ -15,23 +16,23 @@ class UserModel {
         }catch(e){
 
             console.log(e)
-
+            throw new Error(e.message)
         }
         
     }
 
     
 
-    public async findLogin(login:string){
+    public async findLogin(login:string):Promise<UserInterface>{
 
         try{
-
-            return await UsersShema.find({login:login}).select('login')
+            
+            return await UsersShema.find({login:login})
 
         }catch(e){
 
-            console.log(e)
-            throw e.message
+            
+            throw new Error(e.message)
             
         }
     }
@@ -45,7 +46,7 @@ class UserModel {
         }catch(e){
 
             console.log(e)
-            throw e.message
+            throw new Error(e.message)
             
         }
     }
@@ -57,7 +58,7 @@ class UserModel {
         }catch(e){
 
             console.log(e)
-            throw e.message
+            throw new Error(e.message)
             
         }
     }
@@ -65,12 +66,11 @@ class UserModel {
     public async buscar(infos:object, limit:number, ofset:number){
 
         try{
-           
             return await UsersShema.find(infos,{nome:1,cpfCnpj:1}).sort({'nome':1}).limit(limit).skip(ofset)
 
         }catch(e){
             
-            throw e.message
+            throw new Error(e.message)
             
         }
 
@@ -84,12 +84,35 @@ class UserModel {
 
         }catch(e){
             
-            throw e.message
+            throw new Error(e.message)
             
         }
 
     }
 
+    public async validaCpfCnpjCadastrado( valor:string) {
+        try{
+          
+            return await UsersShema.find({ cpfCnpj: valor})
+
+        }catch(e){
+            
+            throw new Error(e.message)
+            
+        }
+    }
+
+    public async buscaPorId( valor:string) {
+        try{
+          
+            return await UsersShema.find({ _id: valor})
+
+        }catch(e){
+            
+            throw new Error(e.message)
+            
+        }
+    }
     
 
     

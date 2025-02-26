@@ -8,6 +8,10 @@ import VendaModel from "../models/VendaModel";
 import moment from "moment-timezone";
 import axios from 'axios';
 import { kardexTiposEnums } from "../enums/KardexTiposEnums";
+import { MetodoPagamentoEnums } from "../enums/MetodoPagamentoEnums";
+import { StatusFaturadoEnum } from "../enums/StatusFaturadoEnum";
+import UserModel from "../models/UserModel";
+import FaturadoModel from "../models/FaturadoModel";
 class VendaController {
 
     public async BuscarVenda(req: Request, res: Response){
@@ -18,6 +22,7 @@ class VendaController {
             const produtos = await VendaModel.busca(inicial, final)
 
             return ReturnSucesso(res, produtos)
+
         }catch(e){
 
             return ReturnErroCatch(res, e.message)
@@ -30,9 +35,23 @@ class VendaController {
         try{
 
 
-            const { userId, tipoVenda,  produtos, user, status, pagamento, valor} = req.body
+            const { userId, tipoVenda,  produtos, user, status, pagamento, valor, clienteId} = req.body
 
             const produtosIds = ExtrairProdutoIds(produtos)
+
+            
+
+            for (let index = 0; index < pagamento.length; index++) {
+                const pag = pagamento[index];
+
+                if( pag.metodo  == MetodoPagamentoEnums.faturado && typeof clienteId == "undefined"){
+
+                    return ReturnErroPadrao( res, 16)
+                
+                }
+
+            }
+               
 
             const buscaProdutoQury = {
                 _id:{ "$in" :produtosIds}
@@ -59,12 +78,52 @@ class VendaController {
                 valor: valor
             }
 
+            
+
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)
 
             if(typeof res_salvarVenda._id == "undefined"){
+
                 throw new Error("Erro ao salvar venda");
+
             }
 
+            let cliente
+
+            if(typeof clienteId != "undefined"){
+
+                cliente = await UserModel.buscaPorId(clienteId)
+                
+            }
+            
+            for (let index = 0; index < pagamento.length; index++) {
+
+                const pag = pagamento[index];
+
+                if( pag.metodo  == MetodoPagamentoEnums.faturado ){
+                     
+                    let infosFaturado = {
+                        user,
+                        userId,
+                        tipoVenda,
+                        status:StatusFaturadoEnum.aberto,
+                        pagamento:[],
+                        data: moment().tz("America/Sao_Paulo").format(),
+                        valor: valor,
+                        vendaId:res_salvarVenda._id.toString(),
+                        cliente:cliente[0],
+
+                    }
+
+                    FaturadoModel.salvar(infosFaturado)
+                    
+                    
+                }
+            }
+
+          
+
+            
             for (let index = 0; index < produtosBuscaPorId.length; index++) {
 
                 let produto = produtosBuscaPorId[index];

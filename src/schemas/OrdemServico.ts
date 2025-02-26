@@ -1,25 +1,25 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface OrdemServicoInterface extends Document {
-    _id?:String;
-    ordemServicoId:Number;
-    user:String;
-    userId: String;
-    vendedorId:String,
-    vendedor:String,
+    _id?:string;
+    ordemServicoId:number;
+    user:string;
+    userId: string;
+    vendedorId:string,
+    vendedor:string,
     mecanico?:Array<object>;
     produtos:Array<object>;
-    dataAbertura:String;
-    dataFechamento?:String;
-    marca:String;
-    modelo:String;
-    placa:String;
-    cor:String;
-    ano:Number;
+    dataAbertura:string;
+    dataFechamento?:string;
+    marca:string;
+    modelo:string;
+    placa:string;
+    cor:string;
+    ano:number;
     checkList?:Array<object>;
-    status:String;
-    km:Number
-    clienteId:String
+    status:string;
+    km:number
+    clienteId:string
 }
 
 export const OrdemServicoSchema = new Schema({

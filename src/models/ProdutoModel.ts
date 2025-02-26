@@ -21,10 +21,23 @@ class ProdutoModel {
         
     }
 
-    public async buscar(infos:object, limit:number, ofset:number) {
+    public async buscar(infos:object) {
         try{
             
-            return await ProdutoShema.find(infos).sort({'nome':1}).limit(limit).skip(ofset)
+            return await ProdutoShema.find(infos).sort({'nome':1})
+
+        }catch(e){
+
+            console.log(e)
+            throw new Error(e.message);
+
+        }
+    }
+
+    public async buscarComLimit(infos:object, limit:number, offset:number) {
+        try{
+            
+            return await ProdutoShema.find(infos).sort({'nome':1}).limit(limit).skip(offset)
 
         }catch(e){
 

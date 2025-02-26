@@ -359,7 +359,7 @@ class ProdutoControlle{
 
             
 
-            const produtos = await ProdutoModel.buscar(infos, limit, offset)
+            const produtos = await ProdutoModel.buscarComLimit(infos, limit, offset)
            
             return ReturnSucesso(res,produtos)
         }catch(e){
