@@ -366,6 +366,32 @@ class ProdutoControlle{
             return ReturnErroCatch(res, e.message)
         }
     }
+    public async  BuscaComValor(req: Request, res: Response){
+        try{
+            let retorno = {
+                valorTotalCMargem:0,
+                valorTotalSMargem:0
+            }
+            let valorTotal = 0
+            let valorTotals = 0
 
+            const produtos = await ProdutoModel.buscar({ estoque: { $gt: 0 }, tipo:"venda" })
+
+            
+            for (let index = 0; index < produtos.length; index++) {
+                const produto = produtos[index];
+               
+                valorTotal = valorTotal + (produto.valorVenda*produto.estoque)
+                valorTotals = valorTotals + (produto.valorCompra*produto.estoque)
+            }
+
+            retorno.valorTotalCMargem = valorTotal.toFixed(2)
+            retorno.valorTotalSMargem = valorTotals.toFixed(2)
+
+            return ReturnSucesso(res,retorno)
+        }catch(e){
+            return ReturnErroCatch(res, e.message)
+        }
+    }
 }
 export default new ProdutoControlle()

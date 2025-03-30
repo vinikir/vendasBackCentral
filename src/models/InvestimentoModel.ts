@@ -57,6 +57,37 @@ class InvestimentoModel {
 
     }
 
+
+    public async buscaInvestimentos(dataInicio: string, dataFinal: string) {
+
+        try {
+
+            let busca = {tipo: "entrada",}
+
+            if (typeof dataInicio != "undefined") {
+                dataInicio = moment(dataInicio).toDate()
+                dataFinal = moment(dataFinal).toDate()
+                busca = {
+                    dataMovimentacao: {
+                        $gte: dataInicio,
+                        $lte: dataFinal,
+                    },
+                    tipo: "entrada",
+                    
+                }
+            }
+           console.log(busca)
+            return await Investimento.find(busca).sort({ id: -1 })
+
+        } catch (e) {
+
+            console.log(e)
+            throw new Error(e.message);
+
+        }
+
+    }
+
     
 
 }

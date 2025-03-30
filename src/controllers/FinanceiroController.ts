@@ -137,6 +137,68 @@ class FinanceiroController {
         }
     }
 
+    public async BuscaInvetimentos (req: Request, res: Response) {
+        try{
+
+            const {inicial, final} = req.query
+
+            let retono:object = {valorTotal:"", investimetos:[]}
+            
+            const investimentos = await InvestimentoModel.buscaInvestimentos(inicial, final)
+            let valorTotal = 0
+
+            for (let index = 0; index < investimentos.length; index++) {
+                const investimento = investimentos[index];
+                
+                retono.investimetos.push({
+                    data:moment(investimento.dataMovimentacao).format("DD/MM/YYYY"),
+                    valor:investimento.valor,
+                    tipo:investimento.tipo,
+                    informacoes:investimento.informacoes ? investimento.informacoes: investimento.socio ,
+                })
+                valorTotal = valorTotal+investimento.valor
+            }
+
+
+            retono.valorTotal = valorTotal.toFixed(2)
+            return ReturnSucesso(res, retono)
+
+        }catch(e){
+            return  ReturnErroCatch(res, e.message)
+        }
+    }
+
+    public async BuscaVendas (req: Request, res: Response) {
+        try{
+
+            const {inicial, final} = req.query
+
+            let retono:object = {valorTotal:"", vendas:[]}
+            
+            let valorTotal = 0
+
+            const vendas = await VendaModel.busca(inicial, final)
+
+            
+            for (let index = 0; index < vendas.length; index++) {
+                const venda = vendas[index];
+                retono.vendas.push({
+                    data:moment(venda.data).format("DD/MM/YYYY"),
+                    valor:venda.valor,
+                    tipo:"venda",
+                    informacoes:venda.user,
+                })
+                valorTotal = valorTotal+venda.valor
+            }
+
+            retono.valorTotal = valorTotal.toFixed(2)
+            return ReturnSucesso(res, retono)
+
+        }catch(e){
+            return  ReturnErroCatch(res, e.message)
+        }
+    }
+
 }
 
 export default new FinanceiroController()

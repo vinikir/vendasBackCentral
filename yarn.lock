@@ -2057,6 +2057,11 @@
   resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-2.0.4.tgz#7eb47726c391b7345a6ec35ad7f4de469cf5ba4f"
   integrity sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==
 
+"@types/mercadopago@^1.5.11":
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/@types/mercadopago/-/mercadopago-1.5.11.tgz#682b010e4c9d0d4d1fceeabd688d93529044efba"
+  integrity sha512-ligRLboSSLYRzwI1oE27wO+AkZXvCsq2YwBThfH5H+byqCkQEAnmr6Nl1HRAdiZCfIPK2eK0b1rgiuatjZWd2g==
+
 "@types/mime@^1":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
@@ -3360,10 +3365,10 @@ memory-pager@^1.0.2:
   resolved "https://registry.yarnpkg.com/memory-pager/-/memory-pager-1.5.0.tgz#d8751655d22d384682741c972f2c3d6dfa3e66b5"
   integrity sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==
 
-mercadopago@^2.0.15:
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/mercadopago/-/mercadopago-2.0.15.tgz#1e476672e7f5d724aa1b62ebfa7b11061261652e"
-  integrity sha512-sIV/Kow8i2raNrWT0CDjOLiEg92FiqgX55psWj4hEXcqmG3R9n5ST/yALN6awdgG0OzA/fq16YH0qYG/8y++Zg==
+mercadopago@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/mercadopago/-/mercadopago-2.3.0.tgz#550558145a8f8f4f6eb39e6020a025c5fb9c508d"
+  integrity sha512-Kbt8d1uHfzHhBn8hOhl83wTa4qzsyq4EOxR+o37Xy1yfEyCZ5eCb480BcIbDAvWK8IxHlFPkGDU9KYGyrobeMA==
   dependencies:
     node-fetch "^2.6.12"
     uuid "^9.0.0"

@@ -11,6 +11,7 @@ import multer from 'multer'
 import GrupoProdutosController from '../controllers/GrupoProdutosController'
 import { ReturnSucesso } from '../helpers/helper'
 import { MetodoPagamentoEnums } from '../enums/MetodoPagamentoEnums'
+import IntegcaoMercadoPagoController from '../controllers/IntegcaoMercadoPagoController'
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
@@ -51,6 +52,9 @@ routes.get('/grupoprodutos',GrupoProdutosController.buscar)
 routes.post('/investimento-salvar',FinanceiroController.EntradaInvestimento )
 routes.post('/investimento-saida-compra',FinanceiroController.SaidaInvestimentoMercadoria )
 routes.get('/caixa',FinanceiroController.BuscaCaixa.bind(FinanceiroController) )
+routes.post('/investimento-buscar',FinanceiroController.BuscaInvetimentos.bind(FinanceiroController))
+routes.post('/vendas-buscar',FinanceiroController.BuscaVendas.bind(FinanceiroController))
+routes.get('/estoque-buscar',ProdutoController.BuscaComValor.bind(ProdutoController))
 
 
 routes.post('/venda',VendaController.RegistrarVenda )
@@ -64,7 +68,11 @@ routes.post('/ordem-servico/salvar',upload.any(), OrdemServicoController.salvar)
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 
+routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 
+routes.post('/process-payment', IntegcaoMercadoPagoController.Pagamento)
+routes.post('/pagamento/pix/qrcode', IntegcaoMercadoPagoController.PixQrCode)
+routes.post('/pagamento/status', IntegcaoMercadoPagoController.ApagamentoStatus)
 
 
 routes.post('/ordem-servico/salvar', OrdemServicoController.salvar)
