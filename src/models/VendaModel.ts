@@ -35,8 +35,6 @@ class VendaModel {
             
         }
 
-        console.log(busca)
-
         return await VendaSchema.find(busca).sort({ vendaId: -1 })
 
     }
