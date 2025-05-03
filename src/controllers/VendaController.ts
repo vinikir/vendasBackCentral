@@ -17,9 +17,25 @@ class VendaController {
     public async BuscarVenda(req: Request, res: Response){
         try{
             
-            const {inicial, final} = req.query
+            const {inicial, final, userId} = req.query
 
             const produtos = await VendaModel.busca(inicial, final)
+
+            return ReturnSucesso(res, produtos)
+
+        }catch(e){
+
+            return ReturnErroCatch(res, e.message)
+
+        }
+    }
+
+    public async BuscarVendaProVendedor(req: Request, res: Response){
+        try{
+            
+            const {dataInicio, dataFim, userId} = req.body
+            
+            const produtos = await VendaModel.buscaProVendedor(dataInicio, dataFim, userId)
 
             return ReturnSucesso(res, produtos)
 

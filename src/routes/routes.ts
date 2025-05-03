@@ -61,6 +61,7 @@ routes.get('/permissoes', PermissoesController.getPermissoesTodos)
 
 routes.post('/venda',VendaController.RegistrarVenda )
 routes.get('/venda',VendaController.BuscarVenda )
+routes.post('/venda/buscar/vendedor',VendaController.BuscarVendaProVendedor )
 
 routes.get('/frete-correio',VendaController.freteCorreios )
 

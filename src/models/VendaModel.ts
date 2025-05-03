@@ -20,6 +20,27 @@ class VendaModel {
 
     }
 
+    public async buscaProVendedor(dataInicio, dataFinal, vendedorId:string) {
+
+        let busca = {userId: vendedorId}
+
+        if (typeof dataInicio != "undefined") {
+            dataInicio = `${dataInicio}T00:00:00.000-03:00`;
+            dataFinal = `${dataFinal}T23:59:59.999-03:00`;
+            busca.data = {
+                    $gte: dataInicio,
+                    $lte: dataFinal,
+                }
+            
+            
+        }
+
+        console.log(busca)
+
+        return await VendaSchema.find(busca).sort({ vendaId: -1 })
+
+    }
+
     public async salvar(infos: object) {
 
         let id = 1

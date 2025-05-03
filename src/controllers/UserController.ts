@@ -479,16 +479,17 @@ class UserControlle {
 
             }
 
-            if(acesso == "web" || res_buscaPemissao.permissoes.web.length == 0){
+            
+            if(acesso == "web" && res_buscaPemissao.permissoes.web.length == 0){
 
                 return ReturnErroPadrao(res, 2)
 
             }
 
-            if(acesso == "mobile" || res_buscaPemissao.permissoes.mobile.length == 0){
+            if(acesso == "mobile" && res_buscaPemissao.permissoes.mobile.length == 0){
 
                 return ReturnErroPadrao(res, 2)
-                
+
             }
 
             sucess = {
