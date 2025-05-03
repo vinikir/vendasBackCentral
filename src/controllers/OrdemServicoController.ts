@@ -3,6 +3,7 @@ import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../
 import OrdemServicoModel from "../models/OrdemServicoModel";
 import { OrdemServicoStatus } from "../enums/OrdemServicoEstado";
 import moment from "moment-timezone";
+import UserModel from "../models/UserModel";
 
 class OrdemServicoController {
     public async salvar (req: Request, res: Response) {
@@ -14,7 +15,7 @@ class OrdemServicoController {
             
             infos.checkList = JSON.parse(infos.checkList)
            
-            infos.mecanico = JSON.parse(infos.mecanico)
+            infos.mecanico = JSON.parse(infos.mecanicos)
 
             infos.produtos = JSON.parse(infos.produtos)
 
@@ -22,9 +23,7 @@ class OrdemServicoController {
 
             infos.dataAbertura = moment().tz("America/Sao_Paulo").format()
 
-            console.log(infos)
             
-            return ReturnSucesso(res,"OK" )
             const res_salvar = await OrdemServicoModel.salvar(infos)
 
             return ReturnSucesso(res,res_salvar )

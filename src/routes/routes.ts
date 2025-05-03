@@ -12,6 +12,7 @@ import GrupoProdutosController from '../controllers/GrupoProdutosController'
 import { ReturnSucesso } from '../helpers/helper'
 import { MetodoPagamentoEnums } from '../enums/MetodoPagamentoEnums'
 import IntegcaoMercadoPagoController from '../controllers/IntegcaoMercadoPagoController'
+import PermissoesController from '../controllers/PermissoesController'
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
@@ -55,7 +56,8 @@ routes.get('/caixa',FinanceiroController.BuscaCaixa.bind(FinanceiroController) )
 routes.post('/investimento-buscar',FinanceiroController.BuscaInvetimentos.bind(FinanceiroController))
 routes.post('/vendas-buscar',FinanceiroController.BuscaVendas.bind(FinanceiroController))
 routes.get('/estoque-buscar',ProdutoController.BuscaComValor.bind(ProdutoController))
-
+routes.post('/permissoes/salvar', PermissoesController.salvarPermissao)
+routes.get('/permissoes', PermissoesController.getPermissoesTodos)
 
 routes.post('/venda',VendaController.RegistrarVenda )
 routes.get('/venda',VendaController.BuscarVenda )

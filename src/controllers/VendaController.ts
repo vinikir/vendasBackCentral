@@ -67,7 +67,7 @@ class VendaController {
 
             }
 
-            const InfosSalvar = {
+            let InfosSalvar = {
                 user,
                 userId,
                 tipoVenda,
@@ -78,8 +78,21 @@ class VendaController {
                 valor: valor
             }
 
-            
+            let cliente
 
+            if(typeof clienteId != "undefined"){
+
+                cliente = await UserModel.buscaPorId(clienteId)
+                if(cliente.length == 0){
+
+                    return ReturnErro(res, 17, 400 )
+
+                }
+
+                InfosSalvar.clienteId = cliente[0]._id.toString()
+                InfosSalvar.clienteNome = cliente[0].nome
+            }
+           
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)
 
             if(typeof res_salvarVenda._id == "undefined"){
@@ -88,13 +101,6 @@ class VendaController {
 
             }
 
-            let cliente
-
-            if(typeof clienteId != "undefined"){
-
-                cliente = await UserModel.buscaPorId(clienteId)
-                
-            }
             
             for (let index = 0; index < pagamento.length; index++) {
 

@@ -4,7 +4,7 @@ export interface UserInterface {
     nome: string;
     login?: string;
     senha?: string; 
-    permisoes?:Array<string>;
+    permissoes?:Array<string>;
     tipo:string;
     cpfCnpj:string;
 }

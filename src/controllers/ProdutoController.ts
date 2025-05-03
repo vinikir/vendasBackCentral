@@ -130,7 +130,8 @@ class ProdutoControlle{
                 imgAdicional,
                 img,
                 valorVenda,
-                grupo
+                grupo,
+                localizacao
             }:ProdutoInterface = req.body; 
 
             const quantidade:number | string =  req.body.quantidade
@@ -150,7 +151,8 @@ class ProdutoControlle{
                 aplicacao,
                 observacao,
                 valorVenda,
-                grupo
+                grupo,
+                localizacao
             }
 
             if(typeof margem == "undefined" && tipo == "venda"){

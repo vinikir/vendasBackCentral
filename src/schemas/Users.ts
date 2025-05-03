@@ -5,10 +5,9 @@ interface User extends Document {
     nome:string;
     login?:string;
     senha?:string;
-    permisoes?:Array<string>;
+    permissoes?:string;
     tipo:string;
     cpfCnpj:string;
-
 }
 
 export const UserSchema = new Schema({
@@ -16,7 +15,7 @@ export const UserSchema = new Schema({
     nome: String,
     login:String,
     senha:String,
-    permisoes:Array,
+    permissoes:String,
     tipo:String,
     cpfCnpj:String
 

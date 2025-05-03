@@ -78,6 +78,14 @@ const erros = {
         "msg": "CPF ou CNP já cadastrado.",
         "codHttp": 400,
     },
+    19:{
+        "msg": "A permissão é obrigatoria.",
+        "codHttp": 400,
+    },
+    20:{
+        "msg": "Permissão não encontrada.",
+        "codHttp": 400,
+    },
 }
 
 

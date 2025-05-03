@@ -20,7 +20,8 @@ export interface ProdutoInterface extends Document {
     img?:string | undefined,
     imgAdicional?:Array<string>,
     categoria?:Array<string>
-    grupo:string
+    grupo:string,
+    localizacao:Array<object>
 }
 
 export interface ProdutoInterfaceUpdate extends Document {
@@ -29,6 +30,7 @@ export interface ProdutoInterfaceUpdate extends Document {
     valorVenda?: number,
     valorCompra?: number,
     estoque?: number,
+    estoque_reservado?: number,
     margem?:number,
     descontoMaximo?:number,
     descricao?:string,
@@ -41,7 +43,8 @@ export interface ProdutoInterfaceUpdate extends Document {
     img?:string,
     imgAdicional?:Array<string>,
     categoria?:Array<string>,
-    grupo:string
+    grupo:string,
+    localizacao:Array<object>
 }
 
 export const ProdutoSchema = new Schema({
@@ -50,6 +53,7 @@ export const ProdutoSchema = new Schema({
     valorVenda: Number,
     valorCompra: Number,
     estoque: Number,
+    estoque_reservado: Number,
     margem:Number,
     descontoMaximo:Number,
     descricao:String,
@@ -62,8 +66,8 @@ export const ProdutoSchema = new Schema({
     img:String,
     imgAdicional:Array,
     categoria:Array,
-    grupo:String
-
+    grupo:String,
+    localizacao:Array
 }, {
     timestamps: true
 })
