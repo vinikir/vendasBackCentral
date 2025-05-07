@@ -46,6 +46,9 @@ routes.post('/produto/entrada',ProdutoController.entrada.bind(ProdutoController)
 routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	
 
 routes.get('/produtos',ProdutoController.buscar)
+routes.get('/produtos/codigobarras/:codigo',ProdutoController.buscarPorCodigoDeBarras)
+routes.get('/faturados',VendaController.buscarFaturados)
+
 
 routes.get('/grupoprodutos',GrupoProdutosController.buscar)
 

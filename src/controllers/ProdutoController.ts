@@ -368,6 +368,26 @@ class ProdutoControlle{
             return ReturnErroCatch(res, e.message)
         }
     }
+
+    public async buscarPorCodigoDeBarras(req: Request, res: Response){
+        try{
+
+            
+         
+            const { codigo } = req.params
+            
+            const produtos = await ProdutoModel.buscarPorCodigoDeBarras(codigo)
+           
+            return ReturnSucesso(res,produtos)
+        }catch(e){
+            return ReturnErroCatch(res, e.message)
+        }
+    }
+
+
+
+
+    
     public async  BuscaComValor(req: Request, res: Response){
         try{
             let retorno = {

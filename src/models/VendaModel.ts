@@ -62,6 +62,17 @@ class VendaModel {
         }
 
     }
+
+    public async buscarPorArray (vendaIds) {
+        try{
+            const vendas = await VendaSchema.find({ _id: { $in: vendaIds } });
+            return vendas
+        }catch (e) {
+
+            throw new Error(e.message);
+
+        }
+    }
 }
 
 export default new VendaModel()

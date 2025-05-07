@@ -45,6 +45,32 @@ class VendaController {
 
         }
     }
+
+    public async buscarFaturados (req: Request, res: Response){
+        try{
+
+            const faturados = await FaturadoModel.busca()
+
+            const vendaIds = faturados.map(f => f.vendaId);
+
+            const vendas = await VendaModel.buscarPorArray(vendaIds)
+
+            
+            const vendaMap = new Map(vendas.map(v => [v._id.toString(), v]));
+
+            const resultado = faturados.map(faturado => ({
+                ...faturado.toObject(),
+                venda: vendaMap.get(faturado.vendaId) || null
+            }));
+
+            return ReturnSucesso(res, resultado)
+
+        }catch(e){
+
+            return ReturnErroCatch(res, e.message)
+
+        }
+    }
    
     public async RegistrarVenda (req: Request, res: Response) {
 
@@ -108,6 +134,7 @@ class VendaController {
                 InfosSalvar.clienteId = cliente[0]._id.toString()
                 InfosSalvar.clienteNome = cliente[0].nome
             }
+           
            
             const res_salvarVenda = await VendaModel.salvar(InfosSalvar)
 

@@ -34,6 +34,22 @@ class ProdutoModel {
         }
     }
 
+    
+
+    public async buscarPorCodigoDeBarras(buscarPorCodigoDeBarras:number) {
+        try{
+            
+            return await ProdutoShema.find({codigoBarra:buscarPorCodigoDeBarras}).sort({'nome':1})
+
+        }catch(e){
+
+            console.log(e)
+            throw new Error(e.message);
+
+        }
+    }
+
+
     public async buscarComLimit(infos:object, limit:number, offset:number) {
         try{
             
