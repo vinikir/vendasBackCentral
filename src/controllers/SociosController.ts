@@ -6,7 +6,22 @@ import { ValidarCpfCnpj, contemCaracterNaoNumerico } from "../helpers/Funcoes";
 class SociosControlle {
 
    
+    public async buscarTodos(req: Request, res: Response): Promise<Response> {
+        try{
 
+            const res_busca = await SociosModel.getAll()
+
+            return ReturnSucesso(res, res_busca)
+
+
+        }catch (e) {
+
+            return ReturnErroCatch(res, e.message)
+
+        }
+    }
+
+    
     public async salvar(req: Request, res: Response): Promise<Response> {
         try {
 

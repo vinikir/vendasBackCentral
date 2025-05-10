@@ -71,7 +71,7 @@ function validarCnpj(cnpj: string): boolean {
     return digito1 === parseInt(cnpj[12]) && digito2 === parseInt(cnpj[13]);
 }
 
-export const contemCaracterNaoNumerico = (valor:string|number) => {
+export const contemCaracterNaoNumerico = (valor:string) => {
     return /\D/.test(valor);
 } 
 

@@ -178,8 +178,7 @@ class UserControlle {
                 email
             }: UserInterface = req.body;
 
-            const ehFuncionarioOuSocio =
-                tipo === TipoUsuariosEnums.funcionario || tipo === TipoUsuariosEnums.socio;
+            const ehFuncionarioOuSocio = tipo === TipoUsuariosEnums.funcionario 
 
             // 🔒 Validações obrigatórias
             if (ehFuncionarioOuSocio && (!senha || senha.trim() === "")) {
@@ -258,11 +257,11 @@ class UserControlle {
 
             const { ativo, nome, login, senha, cpfCnpj, tipo, permisoes }: UserInterface = req.body;
 
-            if ((typeof senha == "undefined" || senha == '') && (tipo == TipoUsuariosEnums.funcionario || tipo == TipoUsuariosEnums.socio)) {
+            if ((typeof senha == "undefined" || senha == '') && (tipo == TipoUsuariosEnums.funcionario )) {
                 return ReturnErroPadrao(res, 0)
             }
 
-            if ((typeof cpfCnpj == "undefined" || cpfCnpj == '') && (tipo == TipoUsuariosEnums.funcionario || tipo == TipoUsuariosEnums.socio)) {
+            if ((typeof cpfCnpj == "undefined" || cpfCnpj == '') && (tipo == TipoUsuariosEnums.funcionario )) {
 
                 return ReturnErroPadrao(res, 6)
 
@@ -275,7 +274,7 @@ class UserControlle {
             }
 
 
-            if ((tipo == TipoUsuariosEnums.funcionario || tipo == TipoUsuariosEnums.socio) && (typeof permisoes == "undefined" || permisoes.length == 0)) {
+            if ((tipo == TipoUsuariosEnums.funcionario) && (typeof permisoes == "undefined" || permisoes.length == 0)) {
 
                 return ReturnErroPadrao(res, 19)
 
@@ -300,9 +299,6 @@ class UserControlle {
             }
 
 
-
-
-
             let user: UserInterface = {
                 ativo: true,
                 nome,
@@ -310,7 +306,7 @@ class UserControlle {
                 tipo: tipo,
             }
 
-            if (tipo == TipoUsuariosEnums.funcionario || tipo == TipoUsuariosEnums.socio) {
+            if ( tipo == TipoUsuariosEnums.funcionario ) {
 
                 if (typeof login == "undefined") {
 
