@@ -13,6 +13,8 @@ import { ReturnSucesso } from '../helpers/helper'
 import { MetodoPagamentoEnums } from '../enums/MetodoPagamentoEnums'
 import IntegcaoMercadoPagoController from '../controllers/IntegcaoMercadoPagoController'
 import PermissoesController from '../controllers/PermissoesController'
+import SociosController from '../controllers/SociosController'
+
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
@@ -23,30 +25,26 @@ routes.get('/', (req, res) => {
     res.send({"versao":"2"})
 })	
 
-routes.post('/', (req, res) => {
-    res.send({"versao":"3 post"})
-})	
-
-
-routes.get('/e',UserController.buscarTodos)	
 routes.post('/user',UserController.create.bind(UserController))	
 routes.post('/login',UserController.login)	
 routes.post('/trocar-senha',UserController.trocarSenha )
-routes.post('/orcamento/salvar', OrcamentoController.salvar)
-routes.post('/orcamentos', OrcamentoController.buscar)
 routes.get('/vendedor-listar', UserController.listarVendedor)
+routes.get('/user-buscar',UserController.buscar.bind(UserController))
+routes.get('/e',UserController.buscarTodos)	
+
 
 routes.post('/orcamento/salvar', OrcamentoController.salvar)
 routes.post('/orcamentos', OrcamentoController.buscar)
-routes.get('/user-buscar',UserController.buscar.bind(UserController))
+routes.post('/orcamento/salvar', OrcamentoController.salvar)
+routes.post('/orcamentos', OrcamentoController.buscar)
 
 routes.post('/produto',ProdutoController.salvar.bind(ProdutoController))	
 routes.post('/produto/entrada',ProdutoController.entrada.bind(ProdutoController))	
-
 routes.post('/produto/atualizar',ProdutoController.atualiuzar.bind(ProdutoController))	
-
 routes.get('/produtos',ProdutoController.buscar)
 routes.get('/produtos/codigobarras/:codigo',ProdutoController.buscarPorCodigoDeBarras)
+
+
 routes.get('/faturados',VendaController.buscarFaturados)
 
 
@@ -57,7 +55,6 @@ routes.post('/investimento-salvar',FinanceiroController.EntradaInvestimento )
 routes.post('/investimento-saida-compra',FinanceiroController.SaidaInvestimentoMercadoria )
 routes.get('/caixa',FinanceiroController.BuscaCaixa.bind(FinanceiroController) )
 routes.post('/investimento-buscar',FinanceiroController.BuscaInvetimentos.bind(FinanceiroController))
-routes.post('/vendas-buscar',FinanceiroController.BuscaVendas.bind(FinanceiroController))
 routes.get('/estoque-buscar',ProdutoController.BuscaComValor.bind(ProdutoController))
 routes.post('/permissoes/salvar', PermissoesController.salvarPermissao)
 routes.get('/permissoes', PermissoesController.getPermissoesTodos)
@@ -65,15 +62,19 @@ routes.get('/permissoes', PermissoesController.getPermissoesTodos)
 routes.post('/venda',VendaController.RegistrarVenda )
 routes.get('/venda',VendaController.BuscarVenda )
 routes.post('/venda/buscar/vendedor',VendaController.BuscarVendaProVendedor )
+routes.post('/vendas-buscar',FinanceiroController.BuscaVendas.bind(FinanceiroController))
+
+routes.post('/socios/salvar',SociosController.salvar)
+
 
 routes.get('/frete-correio',VendaController.freteCorreios )
 
 
 
 routes.post('/ordem-servico/salvar',upload.any(), OrdemServicoController.salvar)
+routes.post('/ordem-servico/salvar', OrdemServicoController.salvar)
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
-
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 
 routes.post('/process-payment', IntegcaoMercadoPagoController.Pagamento)
@@ -81,7 +82,6 @@ routes.post('/pagamento/pix/qrcode', IntegcaoMercadoPagoController.PixQrCode)
 routes.post('/pagamento/status', IntegcaoMercadoPagoController.ApagamentoStatus)
 
 
-routes.post('/ordem-servico/salvar', OrdemServicoController.salvar)
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 

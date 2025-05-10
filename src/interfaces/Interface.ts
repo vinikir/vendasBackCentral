@@ -7,6 +7,8 @@ export interface UserInterface {
     permissoes?:Array<string>;
     tipo:string;
     cpfCnpj:string;
+    telefone?:string;
+    email?:string
 }
 
 export interface ErrorInterface{

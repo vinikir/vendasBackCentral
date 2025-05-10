@@ -71,6 +71,10 @@ function validarCnpj(cnpj: string): boolean {
     return digito1 === parseInt(cnpj[12]) && digito2 === parseInt(cnpj[13]);
 }
 
+export const contemCaracterNaoNumerico = (valor:string|number) => {
+    return /\D/.test(valor);
+} 
+
 
 export  const ExtrairProdutoIds = (dados: { produtoId: string }[]): string[] => {
     return dados.map(item => item.produtoId);

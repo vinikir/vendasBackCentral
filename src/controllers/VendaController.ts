@@ -127,7 +127,7 @@ class VendaController {
                 cliente = await UserModel.buscaPorId(clienteId)
                 if(cliente.length == 0){
 
-                    return ReturnErro(res, 17, 400 )
+                    return ReturnErroPadrao(res, 17 )
 
                 }
 

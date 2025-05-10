@@ -8,6 +8,8 @@ interface User extends Document {
     permissoes?:string;
     tipo:string;
     cpfCnpj:string;
+    telefone?:Number;
+    email?:string
 }
 
 export const UserSchema = new Schema({
@@ -17,8 +19,9 @@ export const UserSchema = new Schema({
     senha:String,
     permissoes:String,
     tipo:String,
-    cpfCnpj:String
-
+    cpfCnpj:String,
+    telefone:Number,
+    email:String
     
 }, {
     timestamps: true

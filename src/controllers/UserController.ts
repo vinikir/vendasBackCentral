@@ -173,7 +173,9 @@ class UserControlle {
                 senha,
                 cpfCnpj,
                 tipo,
-                permisoes
+                permissoes,
+                telefone,
+                email
             }: UserInterface = req.body;
 
             const ehFuncionarioOuSocio =
@@ -192,34 +194,35 @@ class UserControlle {
                 return ReturnErroPadrao(res, 7);
             }
 
-            if (ehFuncionarioOuSocio && (!permisoes || permisoes.length === 0)) {
+            if (ehFuncionarioOuSocio && (!permissoes || permissoes.length === 0)) {
                 return ReturnErroPadrao(res, 19);
             }
 
-            // 📄 Valida CPF/CNPJ
+            
             const resultadoValidacao = ValidarCpfCnpj(cpfCnpj);
             if (!resultadoValidacao.valido) {
                 return ReturnErro(res, `${resultadoValidacao.tipo} invalido.`, 998);
             }
 
+           
             const cpfCnpjLimpo = resultadoValidacao.valor;
 
             const jaCadastrado = await UserModel.validaCpfCnpjCadastrado(cpfCnpjLimpo);
             if (jaCadastrado.length > 0) {
                 return ReturnErroPadrao(res, 18);
             }
-
-            // 👤 Montagem do objeto usuário base
+           
             const user: UserInterface = {
                 ativo: ativo !== undefined ? ativo : true,
                 nome,
                 cpfCnpj: cpfCnpjLimpo,
-                tipo
+                tipo,
+                email,
+                telefone:telefone.replace(/\D/g, '')
             };
 
-            // 👨‍💻 Se for funcionário ou sócio, configurar login/senha/permissões
             if (ehFuncionarioOuSocio) {
-                if (!login) return ReturnErroPadrao(res, 17);
+                if (!login) return ReturnErroPadrao(res, 1);
 
                 const loginPermitido: ValidarLoginInterface = await this.validaLogin(login);
                 if (!loginPermitido.permitido) {
@@ -235,11 +238,10 @@ class UserControlle {
                 user.senha = bcrypt.hash(senha, 8);
                 user.permisoes = permisoes;
             } else {
-                // 📱 Usuário comum (cliente) recebe login UUID
                 user.login = uuid.v4();
             }
 
-            // 💾 Salvar usuário
+
             const usuarioSalvo = await UserModel.salvar(user);
             usuarioSalvo.senha = undefined;
 
@@ -312,7 +314,7 @@ class UserControlle {
 
                 if (typeof login == "undefined") {
 
-                    return ReturnErroPadrao(res, 17)
+                    return ReturnErroPadrao(res, 1)
 
                 }
 
