@@ -189,6 +189,14 @@ const erros = {
     msg: "O percentual do sócio está invalido.",
     codHttp: 422,
   },
+  24: {
+    msg: "O cargo é obrigatorio.",
+    codHttp: 422,
+  },
+  25: {
+    msg: "O cargo informado é invalido.",
+    codHttp: 422,
+  },
 };
 
 

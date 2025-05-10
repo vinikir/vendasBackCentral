@@ -2,10 +2,6 @@ export interface UserInterface {
     _id?: string;
     ativo: boolean;
     nome: string;
-    login?: string;
-    senha?: string; 
-    permissoes?:Array<string>;
-    tipo:string;
     cpfCnpj:string;
     telefone?:string;
     email?:string

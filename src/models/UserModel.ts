@@ -21,6 +21,20 @@ class UserModel {
         
     }
 
+    public async deletePorId(id:string){
+
+        try{
+
+            return await UsersShema.deleteOne({_id:id})
+
+        }catch(e){
+
+            console.log(e)
+            throw new Error(e.message)
+        }
+        
+    }
+
     
 
     public async findLogin(login:string):Promise<UserInterface>{

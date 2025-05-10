@@ -17,7 +17,7 @@ export const SociosSchema = new Schema({
     timestamps: true
 })
 
-SociosSchema.index({ cpfCnpj: 1 }, { unique: true });
+SociosSchema.index({ cpf: 1 }, { unique: true });
 
 
 export default model<Socios>('socios',SociosSchema)

@@ -11,6 +11,8 @@ import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
 import { TipoUsuariosEnums } from "../enums/TipoUsuariosEnums";
 import * as uuid from 'uuid'
 import PermissoesModel from "../models/PermissoesModel";
+import FuncionariosModel from "../models/FuncionariosModel";
+import { CargosTiposEnums } from "../enums/CargosEnum";
 class UserControlle {
 
     public async buscarTodos(req: Request, res: Response): Promise<object> {
@@ -175,17 +177,17 @@ class UserControlle {
                 tipo,
                 permissoes,
                 telefone,
-                email
-            }: UserInterface = req.body;
+                email,
+                cargo
+            } = req.body;
 
-            const ehFuncionarioOuSocio = tipo === TipoUsuariosEnums.funcionario 
+            const ehFuncionario = tipo === TipoUsuariosEnums.funcionario 
 
-            // 🔒 Validações obrigatórias
-            if (ehFuncionarioOuSocio && (!senha || senha.trim() === "")) {
+            if (ehFuncionario && (!senha || senha.trim() === "")) {
                 return ReturnErroPadrao(res, 0);
             }
 
-            if (ehFuncionarioOuSocio && (!cpfCnpj || cpfCnpj.trim() === "")) {
+            if (ehFuncionario && (!cpfCnpj || cpfCnpj.trim() === "")) {
                 return ReturnErroPadrao(res, 6);
             }
 
@@ -193,12 +195,13 @@ class UserControlle {
                 return ReturnErroPadrao(res, 7);
             }
 
-            if (ehFuncionarioOuSocio && (!permissoes || permissoes.length === 0)) {
+            if (ehFuncionario && (!permissoes || permissoes.length === 0)) {
                 return ReturnErroPadrao(res, 19);
             }
 
             
             const resultadoValidacao = ValidarCpfCnpj(cpfCnpj);
+
             if (!resultadoValidacao.valido) {
                 return ReturnErro(res, `${resultadoValidacao.tipo} invalido.`, 998);
             }
@@ -210,157 +213,86 @@ class UserControlle {
             if (jaCadastrado.length > 0) {
                 return ReturnErroPadrao(res, 18);
             }
+
+            let telefoneLimpo
+            if(typeof telefone != "undefined"){
+                telefoneLimpo = telefone.replace(/\D/g, '')
+            }
            
             const user: UserInterface = {
                 ativo: ativo !== undefined ? ativo : true,
                 nome,
                 cpfCnpj: cpfCnpjLimpo,
-                tipo,
                 email,
-                telefone:telefone.replace(/\D/g, '')
+                telefone:telefoneLimpo
             };
 
-            if (ehFuncionarioOuSocio) {
+            if (ehFuncionario) {
+
                 if (!login) return ReturnErroPadrao(res, 1);
 
-                const loginPermitido: ValidarLoginInterface = await this.validaLogin(login);
-                if (!loginPermitido.permitido) {
-                    return ReturnErro(res, loginPermitido.msg, 500);
+                if (!cargo) return ReturnErroPadrao(res, 24);
+
+                if(cargo != CargosTiposEnums.administrador && cargo != CargosTiposEnums.vendedor){
+                    return ReturnErroPadrao(res, 25)
                 }
 
-                const permissoesValidas = await PermissoesModel.buscarPorId(permisoes);
+                const loginPermitido: ValidarLoginInterface = await this.validaLogin(login);
+
+                if (!loginPermitido.permitido) {
+
+                    return ReturnErro(res, loginPermitido.msg, 500);
+
+                }
+
+                const permissoesValidas = await PermissoesModel.buscarPorId(permissoes);
+
                 if (!permissoesValidas || permissoesValidas.length === 0) {
                     return ReturnErroPadrao(res, 20);
                 }
 
-                user.login = login;
-                user.senha = bcrypt.hash(senha, 8);
-                user.permisoes = permisoes;
-            } else {
-                user.login = uuid.v4();
             }
 
 
             const usuarioSalvo = await UserModel.salvar(user);
-            usuarioSalvo.senha = undefined;
+
+
+            if (ehFuncionario) {
+                
+
+                try{
+
+                    await FuncionariosModel.salvar(
+                        {
+                            userId:usuarioSalvo._id,
+                            ativo: true, 
+                            cargo:cargo,
+                            permissao:permissoes,
+                            login,
+                            senha 
+                        }
+                    )
+
+                }catch(e:any){
+
+                    await UserModel.deletePorId(usuarioSalvo._id)
+
+                    throw new Error(e.message)
+
+                }
+               
+            } 
+
 
             return ReturnSucesso(res, usuarioSalvo);
 
         } catch (e: any) {
+
             return ReturnErroCatch(res, e.message);
+
         }
     }
 
-
-    public async create_old(req: Request, res: Response): Promise<object> {
-        try {
-
-            const { ativo, nome, login, senha, cpfCnpj, tipo, permisoes }: UserInterface = req.body;
-
-            if ((typeof senha == "undefined" || senha == '') && (tipo == TipoUsuariosEnums.funcionario )) {
-                return ReturnErroPadrao(res, 0)
-            }
-
-            if ((typeof cpfCnpj == "undefined" || cpfCnpj == '') && (tipo == TipoUsuariosEnums.funcionario )) {
-
-                return ReturnErroPadrao(res, 6)
-
-            }
-
-            if (typeof tipo == "undefined" || tipo == '') {
-
-                return ReturnErroPadrao(res, 7)
-
-            }
-
-
-            if ((tipo == TipoUsuariosEnums.funcionario) && (typeof permisoes == "undefined" || permisoes.length == 0)) {
-
-                return ReturnErroPadrao(res, 19)
-
-            }
-
-            const resValidaCnpj = ValidarCpfCnpj(cpfCnpj)
-
-            if (resValidaCnpj.valido == false) {
-
-                return ReturnErro(res, `${resValidaCnpj.tipo} invalido. `, 998)
-
-            }
-
-            const cpfCnpjLimpo = resValidaCnpj.valor
-
-            const resValidaCnpjCadastrado = await UserModel.validaCpfCnpjCadastrado(cpfCnpjLimpo)
-
-            if (resValidaCnpjCadastrado.length > 0) {
-
-                return ReturnErroPadrao(res, 18)
-
-            }
-
-
-            let user: UserInterface = {
-                ativo: true,
-                nome,
-                cpfCnpj: cpfCnpjLimpo,
-                tipo: tipo,
-            }
-
-            if ( tipo == TipoUsuariosEnums.funcionario ) {
-
-                if (typeof login == "undefined") {
-
-                    return ReturnErroPadrao(res, 1)
-
-                }
-
-                const permitidoCadastro: ValidarLoginInterface = await this.validaLogin(login)
-
-
-                if (!permitidoCadastro.permitido) {
-
-                    return ReturnErro(res, permitidoCadastro.msg, 500)
-
-                }
-
-                const res_buscaPermissao = await PermissoesModel.buscarPorId(permisoes)
-
-                if (res_buscaPermissao == null || res_buscaPermissao.length == 0) {
-                    return ReturnErroPadrao(res, 20)
-                }
-
-                const hashPassword = await bcrypt.hash(senha, 8)
-                user.login = login
-                user.senha = hashPassword
-                user.permisoes = permisoes
-
-            } else {
-
-                user.login = uuid.v4()
-
-            }
-
-            if (typeof ativo != "undefined") {
-                user.ativo = ativo
-            }
-
-            let userCreate: any = {}
-
-            userCreate = await UserModel.salvar(user)
-
-            userCreate.senha = undefined
-
-            return ReturnSucesso(res, userCreate)
-
-        } catch (e) {
-
-            return ReturnErroCatch(res, e.message)
-
-        }
-
-
-
-    }
 
     public async trocarSenha(req: Request, res: Response) {
         try {
@@ -377,7 +309,7 @@ class UserControlle {
             const hashPassword = await bcrypt.hash(senha, 8)
 
 
-            const res_up = await UserModel.atualizar(id, { senha: hashPassword })
+            const res_up = await FuncionariosModel.atualizar(id, { senha: hashPassword })
 
             return ReturnSucesso(res, res_up)
 
@@ -391,7 +323,7 @@ class UserControlle {
     private async validaLogin(login: string): Promise<ValidarLoginInterface> {
         try {
 
-            const res_login: UserInterface = await UserModel.findLogin(login)
+            const res_login = await FuncionariosModel.findPorLogin(login)
 
 
 
@@ -432,25 +364,26 @@ class UserControlle {
                 return ReturnErroPadrao(res, 1)
             }
 
-            let userLogin: Array<UserInterface> = await UserModel.findPorLogin(login)
-
-            if (!userLogin) {
+            let funcionarioLogin = await FuncionariosModel.findPorLogin(login)
+            
+            if (!funcionarioLogin) {
                 return ReturnErroPadrao(res, 2)
             }
 
-            if (userLogin == null) {
+            if (funcionarioLogin == null) {
 
                 return ReturnErroPadrao(res, 2)
 
             }
 
-            if (userLogin.length == 0) {
+            if (funcionarioLogin.length == 0) {
                 return ReturnErroPadrao(res, 2)
             }
 
-            const usuario: UserInterface = userLogin[0]
+            const funcionario = funcionarioLogin[0]
+            
 
-            let senhaCompare: string = usuario.senha
+            let senhaCompare: string = funcionario.senha
 
             const passwordVerify = await bcrypt.compare(senha, senhaCompare)
 
@@ -467,9 +400,8 @@ class UserControlle {
 
             }
 
-            
 
-            const  res_buscaPemissao = await PermissoesModel.buscarPorId(usuario.permissoes)
+            const  res_buscaPemissao = await PermissoesModel.buscarPorId(funcionario.permissao)
 
             if(res_buscaPemissao == null || res_buscaPemissao.length == 0){
 
@@ -490,11 +422,15 @@ class UserControlle {
 
             }
 
+            const usuario = await UserModel.buscaPorId(funcionario.userId)
+
             sucess = {
-                "Nome": `${usuario.nome}`,
-                "nome": `${usuario.nome}`,
-                "id": `${usuario._id}`,
-                "ID": `${usuario._id}`,
+                "Nome": `${usuario[0].nome}`,
+                "nome": `${usuario[0].nome}`,
+                "id": `${funcionario._id}`,
+                "ID": `${funcionario._id}`,
+                "userId": `${usuario[0]._id}`,
+                "funcionarioId": `${funcionario._id}`,
                 "permissoes":res_buscaPemissao
             }
 
