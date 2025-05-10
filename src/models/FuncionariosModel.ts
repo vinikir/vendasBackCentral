@@ -1,5 +1,5 @@
 import Funcionarios from "../schemas/Funcionarios"
-
+import { CargosTiposEnums } from "../enums/CargosEnum"
 class FuncionariosModel {
 
     public async getAll(){
@@ -69,17 +69,30 @@ class FuncionariosModel {
 
     public async findPorLogin(login:string){
     
-            try{
-                
-                return await Funcionarios.find({login:login})
-    
-            }catch(e){
-    
-                
-                throw new Error(e.message)
-                
-            }
+        try{
+            
+            return await Funcionarios.find({login:login})
+
+        }catch(e){
+
+            
+            throw new Error(e.message)
+            
         }
+    }
+
+    public async buscaVendedor  (){
+        try{
+            
+            return await Funcionarios.find({cargo: {$in: [CargosTiposEnums.administrador, CargosTiposEnums.vendedor]}})
+
+        }catch(e){
+
+            
+            throw new Error(e.message)
+            
+        }
+    }
     
 
     

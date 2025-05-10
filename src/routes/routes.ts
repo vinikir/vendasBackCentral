@@ -14,6 +14,7 @@ import { MetodoPagamentoEnums } from '../enums/MetodoPagamentoEnums'
 import IntegcaoMercadoPagoController from '../controllers/IntegcaoMercadoPagoController'
 import PermissoesController from '../controllers/PermissoesController'
 import SociosController from '../controllers/SociosController'
+import FuncionariosController from '../controllers/FuncionariosController'
 
 
 const storage = multer.memoryStorage()
@@ -26,11 +27,13 @@ routes.get('/', (req, res) => {
 })	
 
 routes.post('/user',UserController.create.bind(UserController))	
-routes.post('/login',UserController.login)	
-routes.post('/trocar-senha',UserController.trocarSenha )
-routes.get('/vendedor-listar', UserController.listarVendedor)
 routes.get('/user-buscar',UserController.buscar.bind(UserController))
 routes.get('/e',UserController.buscarTodos)	
+
+routes.post('/login',FuncionariosController.login)	
+routes.post('/trocar-senha',FuncionariosController.trocarSenha )
+routes.get('/vendedor-listar', FuncionariosController.listarVendedor)
+
 
 
 routes.post('/orcamento/salvar', OrcamentoController.salvar)
