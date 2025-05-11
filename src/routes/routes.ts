@@ -55,7 +55,6 @@ routes.get('/faturados',VendaController.buscarFaturados)
 routes.get('/grupoprodutos',GrupoProdutosController.buscar)
 
 
-routes.post('/investimento-salvar',FinanceiroController.EntradaInvestimento )
 routes.post('/investimento-saida-compra',FinanceiroController.SaidaInvestimentoMercadoria )
 routes.get('/caixa',FinanceiroController.BuscaCaixa.bind(FinanceiroController) )
 routes.post('/investimento-buscar',FinanceiroController.BuscaInvetimentos.bind(FinanceiroController))
