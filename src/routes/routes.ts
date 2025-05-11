@@ -15,6 +15,7 @@ import IntegcaoMercadoPagoController from '../controllers/IntegcaoMercadoPagoCon
 import PermissoesController from '../controllers/PermissoesController'
 import SociosController from '../controllers/SociosController'
 import FuncionariosController from '../controllers/FuncionariosController'
+import AporteController from '../controllers/AporteController'
 
 
 const storage = multer.memoryStorage()
@@ -73,6 +74,7 @@ routes.get('/socios',SociosController.buscarTodos)
 
 routes.get('/frete-correio',VendaController.freteCorreios )
 
+routes.post("/aporte/salvar", AporteController.EntradaInvestimento)
 
 
 routes.post('/ordem-servico/salvar',upload.any(), OrdemServicoController.salvar)
