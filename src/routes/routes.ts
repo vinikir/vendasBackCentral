@@ -16,7 +16,7 @@ import PermissoesController from '../controllers/PermissoesController'
 import SociosController from '../controllers/SociosController'
 import FuncionariosController from '../controllers/FuncionariosController'
 import AporteController from '../controllers/AporteController'
-
+import FonecedoresController from '../controllers/FonecedoresController'
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
@@ -85,6 +85,13 @@ routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
 routes.post('/process-payment', IntegcaoMercadoPagoController.Pagamento)
 routes.post('/pagamento/pix/qrcode', IntegcaoMercadoPagoController.PixQrCode)
 routes.post('/pagamento/status', IntegcaoMercadoPagoController.ApagamentoStatus)
+
+routes.post("/fornecedores", FonecedoresController.salvar);
+routes.get("/fornecedores", FonecedoresController.listarTodos);
+routes.get("/fornecedores/id/:id", FonecedoresController.buscarPorId);
+routes.get("/fornecedores/documento/:documento", FonecedoresController.buscarPorDumento);
+routes.get("/fornecedores/nome", FonecedoresController.buscarPorNome);
+routes.put("/fornecedores/:id", FonecedoresController.atualizarPorId);
 
 
 
