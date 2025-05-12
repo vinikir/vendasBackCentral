@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: API de Despesas
+  version: 1.0.0
+  description: Documentação da API de controle de despesas
+
+paths:
+  /despesas:
+    post:
+      summary: Cadastrar uma nova despesa
+      tags: [Despesas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DespesaInput'
+      responses:
+        200:
+          description: Despesa cadastrada com sucesso
+    get:
+      summary: Listar todas as despesas
+      tags: [Despesas]
+      responses:
+        200:
+          description: Lista de despesas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Despesa'
+
+  /despesas/{id}:
+    get:
+      summary: Buscar despesa por ID
+      tags: [Despesas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Despesa encontrada
+    put:
+      summary: Atualizar despesa por ID
+      tags: [Despesas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DespesaInput'
+      responses:
+        200:
+          description: Despesa atualizada com sucesso
+
+  /despesas-filtro:
+    get:
+      summary: Buscar despesas com filtros (categoria, fornecedorId, etc.)
+      tags: [Despesas]
+      parameters:
+        - in: query
+          name: categoria
+          schema:
+            type: string
+        - in: query
+          name: formaPagamento
+          schema:
+            type: string
+        - in: query
+          name: fornecedorId
+          schema:
+            type: string
+        - in: query
+          name: funcionarioId
+          schema:
+            type: string
+      responses:
+        200:
+          description: Lista filtrada de despesas
+
+components:
+  schemas:
+    Despesa:
+      type: object
+      properties:
+        _id:
+          type: string
+        valor:
+          type: number
+        dataSalvou:
+          type: string
+          format: date-time
+        dataMovimentacao:
+          type: string
+          format: date-time
+        descricao:
+          type: string
+        categoria:
+          type: string
+        formaPagamento:
+          type: string
+        fornecedorId:
+          type: string
+        fornecedorNome:
+          type: string
+        funcionarioId:
+          type: string
+        funcionarioNome:
+          type: string
+        observacao:
+          type: string
+
+    DespesaInput:
+      type: object
+      required:
+        - valor
+        - dataMovimentacao
+        - categoria
+        - formaPagamento
+      properties:
+        valor:
+          type: number
+        dataMovimentacao:
+          type: string
+        descricao:
+          type: string
+        categoria:
+          type: string
+        formaPagamento:
+          type: string
+        fornecedorId:
+          type: string
+        fornecedorNome:
+          type: string
+        funcionarioId:
+          type: string
+        funcionarioNome:
+          type: string
+        observacao:
+          type: string

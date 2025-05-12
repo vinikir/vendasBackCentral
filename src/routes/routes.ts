@@ -1,3 +1,5 @@
+import {  Response } from "express";
+
 import { Router} from 'express'
 
 import UserController from '../controllers/UserController'
@@ -17,7 +19,7 @@ import SociosController from '../controllers/SociosController'
 import FuncionariosController from '../controllers/FuncionariosController'
 import AporteController from '../controllers/AporteController'
 import FonecedoresController from '../controllers/FonecedoresController'
-
+import DespesasController from '../controllers/DespesasController'
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage});
 
@@ -93,6 +95,10 @@ routes.get("/fornecedores/documento/:documento", FonecedoresController.buscarPor
 routes.get("/fornecedores/nome", FonecedoresController.buscarPorNome);
 routes.put("/fornecedores/:id", FonecedoresController.atualizarPorId);
 
+routes.post("/despesas", DespesasController.salvar);
+routes.get("/despesas", DespesasController.listarTodos);
+routes.get("/despesas/:id", DespesasController.buscarPorId);
+routes.put("/despesas/:id", DespesasController.atualizarPorId);
 
 
 routes.post('/imagem/salvar', upload.any(), StorageController.salvaImagemS3)
@@ -135,7 +141,6 @@ routes.get('metodospagamentos',  (req, res):Response => {
     ]
 
     return ReturnSucesso(res, ret)
-    res.send({"versao":"3 post"})
 })
 
 

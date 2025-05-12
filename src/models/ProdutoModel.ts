@@ -1,4 +1,4 @@
-import ProdutoShema from "../schemas/Produto"
+import ProdutoShema, { ProdutoInterface } from "../schemas/Produto"
 
 class ProdutoModel {
 
@@ -21,7 +21,7 @@ class ProdutoModel {
         
     }
 
-    public async buscar(infos:object) {
+    public async buscar(infos:object): Promise<Array<ProdutoInterface>> {
         try{
             
             return await ProdutoShema.find(infos).sort({'nome':1})
@@ -36,7 +36,7 @@ class ProdutoModel {
 
     
 
-    public async buscarPorCodigoDeBarras(buscarPorCodigoDeBarras:number) {
+    public async buscarPorCodigoDeBarras(buscarPorCodigoDeBarras:string) {
         try{
             
             return await ProdutoShema.find({codigoBarra:buscarPorCodigoDeBarras}).sort({'nome':1})

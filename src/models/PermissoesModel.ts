@@ -1,3 +1,4 @@
+import { PermissaoInterface } from "../interfaces/PermissaoInterface";
 import Permissoes from "../schemas/Permissoes"
 
 class PermissoesModel {
@@ -20,7 +21,7 @@ class PermissoesModel {
         
     }
 
-    public async buscarPorId(id:string):Promise<object>{
+    public async buscarPorId(id:string):Promise<PermissaoInterface>{
         try{
             
             return await Permissoes.findOne({_id:id})

@@ -5,7 +5,7 @@ export interface FornecedoresInterface extends Document {
   documento: string; // pode ser CPF ou CNPJ
   inscricaoEstadual?: string;
   telefone: string;
-  email: string;
+  email?: string;
   endereco: {
     rua: string;
     numero: string;
@@ -55,7 +55,7 @@ export const FornecedoresSchema = new Schema<FornecedoresInterface>({
   },
   inscricaoEstadual: { type: String },
   telefone: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String },
   endereco: { type: EnderecoSchema, required: true },
   contato: { type: ContatoSchema, required: true },
   tipoFornecedor: { type: String, required: true },

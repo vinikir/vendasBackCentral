@@ -15,7 +15,7 @@ export interface ErrorInterface{
 
 export interface ValidarLoginInterface{
     permitido:boolean;
-    msg:string
+    msg?:string
 }
 
 export interface ProductSearchParams{
@@ -33,5 +33,7 @@ export interface UserSearchParams{
     id?: string;
     cpfCnpj?: string;
     nome?: string;
+    tipo?:string|null
+    
 }
 

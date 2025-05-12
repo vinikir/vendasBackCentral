@@ -53,7 +53,7 @@ class UserControlle {
             }
 
             let funcionarioLogin = await FuncionariosModel.findPorLogin(login)
-            
+           
             if (!funcionarioLogin) {
                 return ReturnErroPadrao(res, 2)
             }
@@ -88,10 +88,9 @@ class UserControlle {
 
             }
 
-
             const  res_buscaPemissao = await PermissoesModel.buscarPorId(funcionario.permissao)
-
-            if(res_buscaPemissao == null || res_buscaPemissao.length == 0){
+            
+            if(res_buscaPemissao == null ){
 
                 return ReturnErroPadrao(res, 2)
 

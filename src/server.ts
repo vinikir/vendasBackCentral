@@ -1,5 +1,6 @@
 import app from "./app";
 import dotenv from "dotenv"
+import carregarSwagger from "./swagger";
 
 dotenv.config()
 
@@ -14,6 +15,9 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     //res.status(500).send('Algo deu errado!');
 });
+
+
+carregarSwagger(app);
 
 try{
     const host:string = "0.0.0.0"

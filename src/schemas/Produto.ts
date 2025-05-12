@@ -7,7 +7,7 @@ export interface ProdutoInterface extends Document {
     nome: string | undefined,
     valorVenda: number,
     valorCompra: number,
-    estoque: number | string,
+    estoque: number,
     margem:number,
     descontoMaximo:number,
     descricao?:string | undefined,
@@ -24,7 +24,7 @@ export interface ProdutoInterface extends Document {
     localizacao:Array<object>
 }
 
-export interface ProdutoInterfaceUpdate extends Document {
+export interface ProdutoInterfaceUpdate  {
     ativo?: boolean,
     nome?: string,
     valorVenda?: number,
@@ -43,8 +43,8 @@ export interface ProdutoInterfaceUpdate extends Document {
     img?:string,
     imgAdicional?:Array<string>,
     categoria?:Array<string>,
-    grupo:string,
-    localizacao:Array<object>
+    grupo?:string,
+    localizacao?:Array<object>
 }
 
 export const ProdutoSchema = new Schema({

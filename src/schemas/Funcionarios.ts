@@ -1,6 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 
-interface Funcionarios extends Document {
+export interface Funcionarios extends Document {
     ativo: boolean;
     userId:string;
     cargo:string;

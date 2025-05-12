@@ -1,3 +1,4 @@
+import { Request, Response } from "express"; 
 import { S3Client, S3 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import * as dotenv from 'dotenv';
@@ -38,7 +39,7 @@ dotenv.config()
 class StorageController {
 
 
-    public async salvaImagemS3(req: Request, res: Response) {
+    public async salvaImagemS3(req: Request, res: Response): Promise<Response> {
         try {
 
 

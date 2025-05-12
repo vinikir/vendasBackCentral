@@ -1,16 +1,19 @@
 import Funcionarios from "../schemas/Funcionarios"
 import { CargosTiposEnums } from "../enums/CargosEnum"
+import { FuncionariosInterface } from "../interfaces/FuncionarioInterface"
+
 class FuncionariosModel {
 
     public async getAll(){
         console.log(await Funcionarios.find())
     }
 
-    public async salvar(infos:object){
+    public async salvar(infos:object):Promise<FuncionariosInterface>{
 
         try{
 
-            return await Funcionarios.create(infos)
+            const funcionario = await Funcionarios.create(infos)
+            return funcionario.toObject();
 
         }catch(e){
 

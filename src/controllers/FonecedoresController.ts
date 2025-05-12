@@ -19,7 +19,7 @@ class FornecedorController {
                 observacoes
             } = req.body;
 
-            if (!nome || !documento || !telefone || !email || !endereco || !contato || !tipoFornecedor) {
+            if (!nome || !documento || !telefone || !endereco || !contato || !tipoFornecedor) {
                 return ReturnErroPadrao(res, 5); // ou crie códigos mais específicos para campos obrigatórios
             }
 

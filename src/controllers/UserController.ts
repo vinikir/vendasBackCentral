@@ -20,6 +20,23 @@ class UserControlle {
         return res.json({ status: "ok" })
     }
 
+
+    private async validaLogin (login:string): Promise<ValidarLoginInterface>{
+        const funcionario = await FuncionariosModel.findPorLogin(login)
+
+        if(funcionario.length <= 0){
+            return{
+                permitido:true,
+                msg:""
+            }
+        }
+
+        return{
+            permitido:false,
+            msg:"Login já cadastrado"
+        }
+    }
+
     private aplicarMascaraCpfCnpj(valor: string) {
         // Remover qualquer caractere que não seja número
         const valorLimpo = valor.replace(/\D/g, '');
@@ -61,7 +78,7 @@ class UserControlle {
 
                 query.search = ajustarPesquisaParaBuscaLike(query.search)
 
-                if (!isNaN(query.search)) {
+                if (typeof query.search === "string" && !isNaN(Number(query.search))) {
                     infos.cpfCnpj = {
                         $regex: new RegExp(query.search, 'i')
                     }
@@ -121,7 +138,7 @@ class UserControlle {
 
                 query.search = ajustarPesquisaParaBuscaLike(query.search)
                
-                if (isNaN(query.search)) {
+                if (typeof query.search === "string" && !isNaN(Number(query.search))) {
                     infos.cpfCnpj = {
                         $regex: new RegExp(query.search, 'i')
                     }
@@ -245,14 +262,14 @@ class UserControlle {
 
                 const permissoesValidas = await PermissoesModel.buscarPorId(permissoes);
 
-                if (!permissoesValidas || permissoesValidas.length === 0) {
+                if (!permissoesValidas || permissoesValidas == null) {
                     return ReturnErroPadrao(res, 20);
                 }
 
             }
 
 
-            const usuarioSalvo = await UserModel.salvar(user);
+            const usuarioSalvo:UserInterface = await UserModel.salvar(user);
 
 
             if (ehFuncionario) {

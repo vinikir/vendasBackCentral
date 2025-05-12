@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ReturnSucesso, ReturnErroPadrao,ReturnErro, ReturnErroCatch } from "../helpers/helper"
+import { ReturnSucesso, ReturnErroPadrao, ReturnErro, ReturnErroCatch } from "../helpers/helper"
 import ProdutoModel from "../models/ProdutoModel";
 import KardexModel from "../models/KardexModel";
 import moment from "moment-timezone";
@@ -9,82 +9,90 @@ import { kardexTiposEnums } from "../enums/KardexTiposEnums";
 import { CategoriaProdutosEnums } from "../enums/CategoriaProdutosEnums";
 import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
 import GrupoProdutosModel from "../models/GrupoProdutosModel";
-class ProdutoControlle{
+class ProdutoControlle {
 
-    private calculavalorVenda (custo, margem){
+    private calculavalorVenda(custo, margem) {
         const margemEmReais = custo * (margem / 100);
 
         const valorVenda = custo + margemEmReais;
-      
+
         return parseFloat(valorVenda.toFixed(2));
     }
 
-    private validarCategorias(categorias: Array<string>): boolean {
-        return categorias.every((categoria:string) =>
-          Object.values(CategoriaProdutosEnums).includes(categoria.toLowerCase())
+    private validarCategorias(categorias: string[]): boolean {
+        return categorias.every((categoria: string) =>
+            Object.values(CategoriaProdutosEnums).includes(categoria.toLowerCase() as CategoriaProdutosEnums)
         );
     }
+    // private validarCategorias(categorias: Array<string>): boolean {
+    //     return categorias.every((categoria:string) =>
+    //       Object.values(CategoriaProdutosEnums).includes(categoria.toLowerCase())
+    //     );
+    // }
 
-    public async entrada(req: Request, res: Response) :  Promise<object>{
-        try{
-            const {  
+    public async entrada(req: Request, res: Response): Promise<object> {
+        try {
+            const {
                 id,
                 valorCompra,
                 valorVenda,
                 descontoMaximo,
                 margem,
-               observacao
-            }:ProdutoInterface = req.body; 
+                observacao
+            } = req.body;
 
-            const quantidade:number | undefined =  req.body.quantidade
-            const avgValor:boolean | undefined =  req.body.avgValor
-
+            const quantidade: number | undefined = req.body.quantidade
+            const avgValor: boolean | undefined = req.body.avgValor
+            
             let infos = {
-                id,
                 valorCompra,
                 valorVenda,
                 descontoMaximo,
                 margem,
-                estoque:quantidade,
+                estoque: quantidade,
+                observacao
             }
 
+            if(typeof infos.estoque === "string" && !isNaN(Number(infos.estoque))){
+                infos.estoque = Number(infos.estoque)
+            }
             let res_Busca = await ProdutoModel.buscarPorId(id)
 
-            if(res_Busca.length <= 0){
-                return ReturnErroPadrao(res, 15 )
+            if (res_Busca.length <= 0) {
+                return ReturnErroPadrao(res, 15)
             }
 
-            let produto:ProdutoInterface = res_Busca[0]
+            let produto: ProdutoInterfaceUpdate = res_Busca[0]
             let tipo = produto.tipo
             let quantidadeAtual = produto.estoque
-            infos.estoque= parseInt(infos.estoque) + parseInt(quantidadeAtual)
-            
-           
-            if(typeof avgValor != "undefined" && avgValor == true && infos.estoque > 0 ){
+            infos.estoque = quantidade + quantidadeAtual
+
+
+            if (typeof avgValor != "undefined" && avgValor == true && infos.estoque > 0) {
 
                 const valoresAntigos = produto.valorVenda * produto.estoque
-                const valorVendaNovo = valorVenda * quantidade
+                const valorVendaNovo = parseFloat(valorVenda) * quantidade
                 const valoresSomados = valoresAntigos + valorVendaNovo
 
 
-                let avg = valoresSomados/ infos.estoque 
+                let avg = valoresSomados / infos.estoque
                 infos.valorVenda = avg.toFixed(2)
 
             }
-            
-            if(typeof margem == "undefined" && tipo == "venda"){
+
+            if (typeof margem == "undefined" && tipo == "venda") {
                 infos.margem = 20
             }
 
-            if( margem < 10 && tipo == "venda"){
-                return ReturnErroPadrao(res, 3 )
+            if (margem < 10 && tipo == "venda") {
+                return ReturnErroPadrao(res, 3)
             }
 
 
-          
+
             const res_produto = await ProdutoModel.atualizar(id, infos)
 
-            if(tipo != "servico" ){
+            if (tipo != "servico") {
 
                 const infosKardex = {
                     tipo: kardexTiposEnums.Entrada,
@@ -92,28 +100,28 @@ class ProdutoControlle{
                     idProduto: id,
                     valor: infos.valorVenda,
                     data: moment().tz("America/Sao_Paulo").format(),
-                    qtd:quantidade
+                    qtd: quantidade
                 }
-    
+
                 await KardexModel.salvar(infosKardex)
 
             }
 
-            return ReturnSucesso(res,res_produto)
+            return ReturnSucesso(res, res_produto)
 
-        }catch(e){
-            console.log("e",e)
+        } catch (e) {
+            console.log("e", e)
             return ReturnErroCatch(res, e.message)
 
         }
 
     }
 
-    public async salvar(req: Request, res: Response):  Promise<object>{
-        try{
+    public async salvar(req: Request, res: Response): Promise<object> {
+        try {
 
-            
-            const {  
+
+            const {
                 ativo,
                 nome,
                 descricao,
@@ -132,19 +140,25 @@ class ProdutoControlle{
                 valorVenda,
                 grupo,
                 localizacao
-            }:ProdutoInterface = req.body; 
+            }: ProdutoInterface = req.body;
 
-            const quantidade:number | string =  req.body.quantidade
+           
 
-            let infos:ProdutoInterface = {
+            let  quantidade = req.body.quantidade
+
+            if(typeof quantidade === "undefined" && !isNaN(Number(quantidade))){
+                quantidade = Number(quantidade)
+            }
+
+            let infos = {
                 ativo,
                 nome,
                 descricao,
                 valorCompra,
                 descontoMaximo,
                 margem,
-                estoque:quantidade,
-                tipo:tipo,
+                estoque: quantidade,
+                tipo: tipo,
                 marca,
                 sku,
                 codigoBarra,
@@ -152,81 +166,75 @@ class ProdutoControlle{
                 observacao,
                 valorVenda,
                 grupo,
-                localizacao
+                localizacao,
+                img,
+                imgAdicional,
+                categoria
             }
 
-            if(typeof margem == "undefined" && tipo == "venda"){
+            if (typeof margem == "undefined" && tipo == "venda") {
                 infos.margem = 20
             }
 
-            if( margem < 10 && tipo == "venda"){
-                return ReturnErroPadrao(res, 3 )
+            if (margem < 10 && tipo == "venda") {
+                return ReturnErroPadrao(res, 3)
             }
 
 
-            if(typeof tipo == "undefined" || ( tipo != "insumo"  && tipo != "venda"  && tipo != "servico" ) ){
-                return ReturnErroPadrao(res, 8 )
+            if (typeof tipo == "undefined" || (tipo != "insumo" && tipo != "venda" && tipo != "servico")) {
+                return ReturnErroPadrao(res, 8)
             }
 
-            if(typeof ativo == "undefined"){
+            if (typeof ativo == "undefined") {
                 infos.ativo = true
             }
 
-            if(typeof img != "undefined"){
+            if (typeof img != "undefined") {
                 infos.img = img
             }
 
-            if(typeof imgAdicional != "undefined"){
+            if (typeof imgAdicional != "undefined") {
                 infos.imgAdicional = imgAdicional
             }
 
-            if( ( typeof quantidade == "undefined" || quantidade == "" ) && tipo != "servico" ){
-                return ReturnErroPadrao(res, 3 )
-            } 
+            if ((typeof quantidade == "undefined" || quantidade == "") && tipo != "servico") {
+                return ReturnErroPadrao(res, 3)
+            }
 
-           
-            if(tipo == "venda"){
 
-                if( ( typeof categoria == "undefined" ) ){
-                    return ReturnErroPadrao(res, 10 )
-                } 
-    
-                if(typeof categoria != "object" ){
-                    return ReturnErroPadrao(res, 11 )
+            if (tipo == "venda") {
+
+                if ((typeof categoria == "undefined")) {
+                    return ReturnErroPadrao(res, 10)
                 }
-    
-                if( categoria.length <= 0 ){
-                    return ReturnErroPadrao(res, 12 )
+
+                if (typeof categoria != "object") {
+                    return ReturnErroPadrao(res, 11)
                 }
-    
-                if(this.validarCategorias(categoria) == false){
-                    return ReturnErroPadrao(res, 13 )
+
+                if (categoria.length <= 0) {
+                    return ReturnErroPadrao(res, 12)
+                }
+
+                if (this.validarCategorias(categoria) == false) {
+                    return ReturnErroPadrao(res, 13)
                 }
 
                 infos.categoria = categoria.map(str => str.toLowerCase());
             }
-            
 
-            if(( typeof quantidade == "undefined" || quantidade == "" ) && tipo == "servico"){
+
+            if ((typeof quantidade == "undefined" || quantidade == "") && tipo == "servico") {
 
                 infos.estoque = 0
 
             }
-            
-            // if(tipo == "venda" ){
 
-            //     infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
 
-            // }else{
 
-            //     infos.valorVenda = valorCompra
-
-            // }
-            
-            
             const res_produto = await ProdutoModel.salvar(infos)
-            
-            if(tipo != "servico" ){
+
+            if (tipo != "servico") {
 
                 const infosKardex = {
                     tipo: kardexTiposEnums.Entrada,
@@ -234,31 +242,31 @@ class ProdutoControlle{
                     idProduto: res_produto._id,
                     valor: infos.valorVenda,
                     data: moment().tz("America/Sao_Paulo").format(),
-                    qtd:quantidade
+                    qtd: quantidade
                 }
-    
+
                 await KardexModel.salvar(infosKardex)
 
             }
 
-            if(typeof grupo != "undefined"){
+            if (typeof grupo != "undefined") {
                 GrupoProdutosModel.salvar(grupo)
             }
-            
 
-            return ReturnSucesso(res,res_produto)
 
-        }catch(e){
-            console.log("e",e)
+            return ReturnSucesso(res, res_produto)
+
+        } catch (e) {
+            console.log("e", e)
             return ReturnErroCatch(res, e.message)
 
         }
-    }   
+    }
 
-    public async atualiuzar (req: Request, res: Response){
-        try{
+    public async atualiuzar(req: Request, res: Response) {
+        try {
 
-            const {  
+            const {
                 id,
                 ativo,
                 nome,
@@ -266,9 +274,9 @@ class ProdutoControlle{
                 valorCompra,
                 descontoMaximo,
                 margem,
-                quantidade ,
+                quantidade,
                 tipo
-            } = req.body; 
+            } = req.body;
 
             let infos:ProdutoInterfaceUpdate = {
                 ativo,
@@ -277,109 +285,110 @@ class ProdutoControlle{
                 valorCompra,
                 descontoMaximo,
                 margem,
-                estoque:quantidade,
-                tipo:tipo
+                estoque: quantidade,
+                tipo: tipo,
+                
             }
 
-            
-            if(typeof id == "undefined"){
-                return ReturnErroPadrao(res, 3 )
+
+            if (typeof id == "undefined") {
+                return ReturnErroPadrao(res, 3)
             }
 
-            if(typeof margem == "undefined"){
+            if (typeof margem == "undefined") {
                 infos.margem = 20
             }
 
-            if(typeof ativo == "undefined"){
+            if (typeof ativo == "undefined") {
                 infos.ativo = true
             }
 
-            if(typeof infos.estoque == "undefined"){
+            if (typeof infos.estoque == "undefined") {
                 infos.estoque = 0
             }
 
-            if( margem < 10){
-                return ReturnErroPadrao(res, 4 )
+            if (margem < 10) {
+                return ReturnErroPadrao(res, 4)
             }
 
-            if(typeof quantidade == "undefined" || quantidade == ""){
-                return ReturnErroPadrao(res, 3 )
-            } 
+            if (typeof quantidade == "undefined" || quantidade == "") {
+                return ReturnErroPadrao(res, 3)
+            }
 
-            infos.valorVenda = this.calculavalorVenda(valorCompra,infos.margem )
+            infos.valorVenda = this.calculavalorVenda(valorCompra, infos.margem)
 
             const res_produto = await ProdutoModel.atualizar(id, infos)
 
-            return ReturnSucesso(res,res_produto)
+            return ReturnSucesso(res, res_produto)
 
-        }catch(e){
+        } catch (e) {
             return ReturnErroCatch(res, e.message)
         }
 
     }
 
 
-    public async buscar(req: Request, res: Response){
-        try{
+    public async buscar(req: Request, res: Response) {
+        try {
 
-            let infos:any = { }
-            let limit:number = 50
-            let offset:number = 0
-         
-            const query:ProductSearchParams = req.query
+            let infos: any = {}
+            let limit: number = 50
+            let offset: number = 0
 
-            if(typeof query != "undefined" && typeof query.id  != "undefined"){
+            const query: ProductSearchParams = req.query
+
+            if (typeof query != "undefined" && typeof query.id != "undefined") {
                 infos._id = query.id
             }
 
-            if(typeof query != "undefined" && typeof query.search  != "undefined" && query.search  != "undefined" && query.search  != ""){
+            if (typeof query != "undefined" && typeof query.search != "undefined" && query.search != "undefined" && query.search != "") {
                 query.search = ajustarPesquisaParaBuscaLike(query.search)
-                infos.nome ={ 
+                infos.nome = {
                     $regex: query.search
                 }
                 limit = 0
             }
 
 
-            if(typeof query != "undefined" && typeof query.tipo  != "undefined" && query.tipo  != "undefined" && query.tipo  != ""){
+            if (typeof query != "undefined" && typeof query.tipo != "undefined" && query.tipo != "undefined" && query.tipo != "") {
 
                 infos.tipo = query.tipo
 
             }
-            
-            if(typeof query != "undefined" && typeof  query.limit  != "undefined" ){
+
+            if (typeof query != "undefined" && typeof query.limit != "undefined") {
 
                 limit = query.limit
 
             }
 
-            if(typeof query != "undefined" && typeof  query.offset  != "undefined" ){
+            if (typeof query != "undefined" && typeof query.offset != "undefined") {
 
                 offset = query.offset
 
             }
 
-            
+
 
             const produtos = await ProdutoModel.buscarComLimit(infos, limit, offset)
-           
-            return ReturnSucesso(res,produtos)
-        }catch(e){
+
+            return ReturnSucesso(res, produtos)
+        } catch (e) {
             return ReturnErroCatch(res, e.message)
         }
     }
 
-    public async buscarPorCodigoDeBarras(req: Request, res: Response){
-        try{
+    public async buscarPorCodigoDeBarras(req: Request, res: Response) {
+        try {
 
-            
-         
+
+
             const { codigo } = req.params
-            
+
             const produtos = await ProdutoModel.buscarPorCodigoDeBarras(codigo)
-           
-            return ReturnSucesso(res,produtos)
-        }catch(e){
+
+            return ReturnSucesso(res, produtos)
+        } catch (e) {
             return ReturnErroCatch(res, e.message)
         }
     }
@@ -387,31 +396,31 @@ class ProdutoControlle{
 
 
 
-    
-    public async  BuscaComValor(req: Request, res: Response){
-        try{
+
+    public async BuscaComValor(req: Request, res: Response) {
+        try {
             let retorno = {
-                valorTotalCMargem:0,
-                valorTotalSMargem:0
+                valorTotalCMargem: 0,
+                valorTotalSMargem: 0
             }
             let valorTotal = 0
             let valorTotals = 0
 
-            const produtos = await ProdutoModel.buscar({ estoque: { $gt: 0 }, tipo:"venda" })
+            const produtos = await ProdutoModel.buscar({ estoque: { $gt: 0 }, tipo: "venda" })
 
-            
+
             for (let index = 0; index < produtos.length; index++) {
-                const produto = produtos[index];
-               
-                valorTotal = valorTotal + (produto.valorVenda*produto.estoque)
-                valorTotals = valorTotals + (produto.valorCompra*produto.estoque)
+                const produto:ProdutoInterface = produtos[index];
+
+                valorTotal = valorTotal + (produto.valorVenda * produto.estoque)
+                valorTotals = valorTotals + (produto.valorCompra * produto.estoque)
             }
 
-            retorno.valorTotalCMargem = valorTotal.toFixed(2)
-            retorno.valorTotalSMargem = valorTotals.toFixed(2)
+            retorno.valorTotalCMargem = parseFloat(valorTotal.toFixed(2))
+            retorno.valorTotalSMargem = parseFloat(valorTotals.toFixed(2))
 
-            return ReturnSucesso(res,retorno)
-        }catch(e){
+            return ReturnSucesso(res, retorno)
+        } catch (e) {
             return ReturnErroCatch(res, e.message)
         }
     }

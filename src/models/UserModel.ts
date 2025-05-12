@@ -1,17 +1,17 @@
 import { UserInterface } from "../interfaces/Interface"
 import UsersShema from "../schemas/Users"
-
 class UserModel {
 
     public async getAll(){
         console.log(await UsersShema.find())
     }
 
-    public async salvar(infos:object){
+    public async salvar(infos:object): Promise<UserInterface>{
 
         try{
 
-            return await UsersShema.create(infos)
+            const usuario = await UsersShema.create(infos)
+            return usuario.toObject();
 
         }catch(e){
 
@@ -37,7 +37,7 @@ class UserModel {
 
     
 
-    public async findLogin(login:string):Promise<UserInterface>{
+    public async findLogin(login:string):Promise<Array<object>>{
 
         try{
             

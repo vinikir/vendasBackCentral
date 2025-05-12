@@ -29,7 +29,7 @@ class InvestimentoModel {
 
     }
 
-    public async busca(dataInicio: string, dataFinal: string) {
+    public async busca(dataInicio: string|Date, dataFinal: string|Date) {
 
         try {
 
@@ -58,7 +58,7 @@ class InvestimentoModel {
     }
 
 
-    public async buscaInvestimentos(dataInicio: string, dataFinal: string) {
+    public async buscaInvestimentos(dataInicio: string|Date, dataFinal: string|Date) {
 
         try {
 

@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors"
 import mongoose from "mongoose";
 import routes from "./routes/routes";
+import carregarSwagger from "./swagger";
+
 class App {
 
     public express: express.Application
@@ -24,7 +26,7 @@ class App {
             mongoose.connect("mongodb+srv://vinikir:bZGelmKUSysEoXQ1@gem.2hrtlg6.mongodb.net/vendas?retryWrites=true&w=majority&appName=GEM")
             //mongoose.connect("mongodb://localhost:27017/vendas")
             //mongoose.connect("mongodb://localhost:27017/vendas_teste")
-        }catch(e){
+        }catch(e:any){
             console.log(e.message)
         }
         

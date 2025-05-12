@@ -1,19 +1,22 @@
 import moment from "moment-timezone";
 import GrupoProduto from "../schemas/GrupoProduto";
+import Produto from "../schemas/Produto";
 
 class GrupoProdutosModel {
 
-    public async salvar(nome: String) {
+    public async salvar(nome: string) {
 
         try {
-            let infos = {nome:nome}
+            
             let id = 1
+            let infos = {nome:nome, id:id}
 
             const existe = await GrupoProduto.find({nome: { 
                 $regex: new RegExp( nome, 'i') 
             }}).sort({ id: -1 })
+
             if(existe.length > 0){
-                return
+                throw new Error("Produto já cadastrado.");
             }
             
             const ultimaMovimentacao = await GrupoProduto.findOne({}).sort({ id: -1 })

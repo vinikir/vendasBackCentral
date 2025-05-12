@@ -1,3 +1,5 @@
+import { ProdutoEstoque, ProdutoVenda } from "../interfaces/ProdutosInteface";
+
 export const ValidarCpfCnpj = (valor: String): { valido: boolean; tipo: string, valor: string  } => {
     // Remove caracteres especiais e espaços
     const valorLimpo = valor.replace(/[^0-9]/g, '');
@@ -80,7 +82,7 @@ export  const ExtrairProdutoIds = (dados: { produtoId: string }[]): string[] => 
     return dados.map(item => item.produtoId);
 }
 
-export const ValidaSaldoPositivo = (produtosVenda: Array<object>, produtosEstoque: Array<object>) => {
+export const ValidaSaldoPositivo = (produtosVenda: Array<ProdutoVenda>, produtosEstoque: Array<ProdutoEstoque>) => {
   
     for (let index = 0; index < produtosVenda.length; index++) {
         
@@ -116,7 +118,7 @@ export const ValidaSaldoPositivo = (produtosVenda: Array<object>, produtosEstoqu
 }
 
 
-export const ajustarPesquisaParaBuscaLike_old = (search:string):String => {
+export const ajustarPesquisaParaBuscaLike_old = (search:string):RegExp => {
 
     if (search.includes('%')) {
         
