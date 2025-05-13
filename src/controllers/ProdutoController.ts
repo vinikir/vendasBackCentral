@@ -275,7 +275,8 @@ class ProdutoControlle {
                 descontoMaximo,
                 margem,
                 quantidade,
-                tipo
+                tipo,
+                localizacao
             } = req.body;
 
             let infos:ProdutoInterfaceUpdate = {
@@ -285,6 +286,7 @@ class ProdutoControlle {
                 valorCompra,
                 descontoMaximo,
                 margem,
+                localizacao,
                 estoque: quantidade,
                 tipo: tipo,
                 
