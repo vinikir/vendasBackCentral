@@ -221,12 +221,19 @@ class ProdutoControlle {
                 }
 
                 infos.categoria = categoria.map(str => str.toLowerCase());
-            }
+                
+            }else if (tipo == "servico") {
 
-
-            if ((typeof quantidade == "undefined" || quantidade == "") && tipo == "servico") {
-
+                infos.categoria = ["servico"]
                 infos.estoque = 0
+                infos.sku = ""
+                infos.codigoBarra = ""
+                infos.marca = ""
+                infos.aplicacao = ""
+                infos.grupo = ""
+                infos.localizacao = []
+                infos.valorCompra = 0
+
 
             }
 

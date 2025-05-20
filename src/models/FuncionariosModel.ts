@@ -4,101 +4,102 @@ import { FuncionariosInterface } from "../interfaces/FuncionarioInterface"
 
 class FuncionariosModel {
 
-    public async getAll(){
+    public async getAll() {
         console.log(await Funcionarios.find())
     }
 
-    public async salvar(infos:object):Promise<FuncionariosInterface>{
+    public async salvar(infos: object): Promise<FuncionariosInterface> {
 
-        try{
+        try {
 
             const funcionario = await Funcionarios.create(infos)
             return funcionario.toObject();
 
-        }catch(e){
+        } catch (e) {
 
             console.log(e)
             throw new Error(e.message)
         }
-        
+
     }
 
-    
 
-   
 
-    
 
-    public async atualizar(id:string, infos:object){
-        try{
-            return await Funcionarios.updateOne({_id:id}, infos, { new: true })
 
-        }catch(e){
+
+
+    public async atualizar(id: string, infos: object) {
+        try {
+            return await Funcionarios.updateOne({ _id: id }, infos, { new: true })
+
+        } catch (e) {
 
             console.log(e)
             throw new Error(e.message)
-            
+
         }
     }
 
-    public async buscar(infos:object, limit:number, ofset:number){
+    public async buscar(infos: object, limit: number, ofset: number) {
 
-        try{
-            return await Funcionarios.find(infos,{nome:1,cpfCnpj:1}).sort({'nome':1}).limit(limit).skip(ofset)
+        try {
+            return await Funcionarios.find(infos, { nome: 1, cpfCnpj: 1 }).sort({ 'nome': 1 }).limit(limit).skip(ofset)
 
-        }catch(e){
-            
+        } catch (e) {
+
             throw new Error(e.message)
-            
+
         }
 
     }
 
-    
 
-   
 
-    public async buscaPorId( valor:string) {
-        try{
-          
-            return await Funcionarios.find({ _id: valor})
 
-        }catch(e){
-            
+
+    public async buscaPorId(valor: string) {
+        try {
+
+            return await Funcionarios.find({ _id: valor })
+
+        } catch (e) {
+
             throw new Error(e.message)
-            
+
         }
     }
 
-    public async findPorLogin(login:string){
-    
-        try{
-            
-            return await Funcionarios.find({login:login})
+    public async findPorLogin(login: string) {
 
-        }catch(e){
+        try {
 
-            
+            return await Funcionarios.find({ login: login })
+
+        } catch (e) {
+
+
             throw new Error(e.message)
-            
+
         }
     }
 
-    public async buscaVendedor  (){
-        try{
-            
+    public async buscaVendedor() {
+        try {
+
             return await Funcionarios.find({cargo: {$in: [CargosTiposEnums.administrador, CargosTiposEnums.vendedor]}})
-
-        }catch(e){
-
             
+
+        } catch (e) {
+
+
             throw new Error(e.message)
-            
+
         }
     }
-    
 
-    
+
+
 }
 
 export default new FuncionariosModel()

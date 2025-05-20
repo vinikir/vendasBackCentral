@@ -53,7 +53,7 @@ class UserControlle {
             }
 
             let funcionarioLogin = await FuncionariosModel.findPorLogin(login)
-           
+
             if (!funcionarioLogin) {
                 return ReturnErroPadrao(res, 2)
             }
@@ -69,7 +69,7 @@ class UserControlle {
             }
 
             const funcionario = funcionarioLogin[0]
-            
+
 
             let senhaCompare: string = funcionario.senha
 
@@ -88,22 +88,22 @@ class UserControlle {
 
             }
 
-            const  res_buscaPemissao = await PermissoesModel.buscarPorId(funcionario.permissao)
-            
-            if(res_buscaPemissao == null ){
+            const res_buscaPemissao = await PermissoesModel.buscarPorId(funcionario.permissao)
+
+            if (res_buscaPemissao == null) {
 
                 return ReturnErroPadrao(res, 2)
 
             }
 
-            
-            if(acesso == "web" && res_buscaPemissao.permissoes.web.length == 0){
+
+            if (acesso == "web" && res_buscaPemissao.permissoes.web.length == 0) {
 
                 return ReturnErroPadrao(res, 2)
 
             }
 
-            if(acesso == "mobile" && res_buscaPemissao.permissoes.mobile.length == 0){
+            if (acesso == "mobile" && res_buscaPemissao.permissoes.mobile.length == 0) {
 
                 return ReturnErroPadrao(res, 2)
 
@@ -118,7 +118,7 @@ class UserControlle {
                 "ID": `${funcionario._id}`,
                 "userId": `${usuario[0]._id}`,
                 "funcionarioId": `${funcionario._id}`,
-                "permissoes":res_buscaPemissao
+                "permissoes": res_buscaPemissao
             }
 
             return ReturnSucesso(res, sucess)
@@ -133,8 +133,19 @@ class UserControlle {
         try {
 
             const res_buscaVendedor = await FuncionariosModel.buscaVendedor()
-            
-            return ReturnSucesso(res, res_buscaVendedor)
+
+            const userIds = res_buscaVendedor.map(f => f.userId?.toString()).filter((id, i, arr) => id && arr.indexOf(id) === i);
+
+            const usuarios = await UserModel.buscaPorArrayId(userIds);
+
+            const mapUsuarios = new Map(usuarios.map(user => [user._id.toString(), user.nome]));
+
+            const resultado = res_buscaVendedor.map(f => ({
+                ...f.toObject?.() ?? f, 
+                nome: mapUsuarios.get(f.userId?.toString()) || null
+            }));
+
+            return ReturnSucesso(res, resultado)
 
         } catch (e) {
 

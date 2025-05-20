@@ -127,7 +127,17 @@ class UserModel {
             
         }
     }
-    
+    public async buscaPorArrayId(valor:Array<string>) {
+        try{
+          
+            return await UsersShema.find({ _id: { $in: valor}})
+
+        }catch(e){
+            
+            throw new Error(e.message)
+            
+        }
+    }
 
     
 }
