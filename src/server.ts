@@ -13,6 +13,7 @@ console.log("server aberto on *:"+port)
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
+    console.log("ate aqui cheguei", req);
     //res.status(500).send('Algo deu errado!');
 });
 
