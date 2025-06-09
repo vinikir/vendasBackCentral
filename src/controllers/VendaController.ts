@@ -264,6 +264,15 @@ class VendaController {
         }
     }
 
+    public async BuscarComisssoes(req: Request, res: Response){
+        try{
+
+            console.log(req.query)
+          return ReturnSucesso(res, "asd")
+        }catch(e){
+            return ReturnErroCatch(res, e.message)
+        }
+    }
     
     
 

@@ -68,6 +68,7 @@ routes.post('/venda',VendaController.RegistrarVenda )
 routes.get('/venda',VendaController.BuscarVenda )
 routes.post('/venda/buscar/vendedor',VendaController.BuscarVendaProVendedor )
 routes.post('/vendas-buscar',FinanceiroController.BuscaVendas.bind(FinanceiroController))
+routes.get('/vendas/comissoes',VendaController.BuscarComisssoes)
 
 routes.post('/socios/salvar',SociosController.salvar)
 routes.get('/socios',SociosController.buscarTodos)
