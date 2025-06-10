@@ -1,9 +1,8 @@
 import moment from "moment-timezone";
-import Investimento from "../schemas/Investimento";
-
+import Investimento, { InvestimentoInterface, CompraMercadoriaInterface } from "../schemas/Investimento";
 class InvestimentoModel {
 
-    public async salvar(infos: object) {
+public async salvar(infos: InvestimentoInterface | CompraMercadoriaInterface ) : Promise<InvestimentoInterface> {
 
         try {
             let id = 1
@@ -15,21 +14,25 @@ class InvestimentoModel {
 
             infos.id = id
 
-            if(infos.dataMovimentacao != "undefined"){
+            if (typeof infos.dataMovimentacao === "string" && infos.dataMovimentacao.trim() !== "") {
                 infos.dataMovimentacao = moment(infos.dataMovimentacao, 'DD/MM/YYYY').toDate();
             }
+
             return await Investimento.create(infos)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            console.log(e)
-            throw new Error(e.message);
 
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            throw new Error("Erro inesperado");
         }
 
     }
 
-    public async busca(dataInicio: string|Date, dataFinal: string|Date) {
+    public async busca(dataInicio: string | Date, dataFinal: string | Date) {
 
         try {
 
@@ -45,24 +48,27 @@ class InvestimentoModel {
                     },
                 }
             }
-           
+
             return await Investimento.find(busca).sort({ id: -1 })
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            console.log(e)
-            throw new Error(e.message);
 
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            throw new Error("Erro inesperado");
         }
 
     }
 
 
-    public async buscaInvestimentos(dataInicio: string|Date, dataFinal: string|Date) {
+    public async buscaInvestimentos(dataInicio: string | Date, dataFinal: string | Date) {
 
         try {
 
-            let busca = {tipo: "entrada",}
+            let busca = { tipo: "entrada", dataMovimentacao: {} }
 
             if (typeof dataInicio != "undefined") {
                 dataInicio = moment(dataInicio).toDate()
@@ -73,22 +79,25 @@ class InvestimentoModel {
                         $lte: dataFinal,
                     },
                     tipo: "entrada",
-                    
+
                 }
             }
-           console.log(busca)
+            console.log(busca)
             return await Investimento.find(busca).sort({ id: -1 })
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            console.log(e)
-            throw new Error(e.message);
 
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            throw new Error("Erro inesperado");
         }
 
     }
 
-    
+
 
 }
 

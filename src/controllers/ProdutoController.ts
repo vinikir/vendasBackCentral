@@ -11,7 +11,7 @@ import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
 import GrupoProdutosModel from "../models/GrupoProdutosModel";
 class ProdutoControlle {
 
-    private calculavalorVenda(custo, margem) {
+    private calculavalorVenda(custo:number, margem:number): number {
         const margemEmReais = custo * (margem / 100);
 
         const valorVenda = custo + margemEmReais;
@@ -41,8 +41,8 @@ class ProdutoControlle {
                 observacao
             } = req.body;
 
-            const quantidade: number | undefined = req.body.quantidade
-            const avgValor: boolean | undefined = req.body.avgValor
+            const quantidade: number = req.body.quantidade
+            const avgValor: boolean = req.body.avgValor
             
             let infos = {
                 valorCompra,
@@ -109,11 +109,15 @@ class ProdutoControlle {
 
             return ReturnSucesso(res, res_produto)
 
-        } catch (e) {
-            console.log("e", e)
-            return ReturnErroCatch(res, e.message)
-
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
+            
 
     }
 
@@ -263,10 +267,13 @@ class ProdutoControlle {
 
             return ReturnSucesso(res, res_produto)
 
-        } catch (e) {
-            console.log("e", e)
-            return ReturnErroCatch(res, e.message)
-
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -296,7 +303,7 @@ class ProdutoControlle {
                 localizacao,
                 estoque: quantidade,
                 tipo: tipo,
-                
+                valorVenda:0
             }
 
 
@@ -330,8 +337,13 @@ class ProdutoControlle {
 
             return ReturnSucesso(res, res_produto)
 
-        } catch (e) {
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
 
     }
@@ -351,9 +363,9 @@ class ProdutoControlle {
             }
 
             if (typeof query != "undefined" && typeof query.search != "undefined" && query.search != "undefined" && query.search != "") {
-                query.search = ajustarPesquisaParaBuscaLike(query.search)
+                const busca = ajustarPesquisaParaBuscaLike(query.search)
                 infos.nome = {
-                    $regex: query.search
+                    $regex: busca
                 }
                 limit = 0
             }
@@ -382,8 +394,13 @@ class ProdutoControlle {
             const produtos = await ProdutoModel.buscarComLimit(infos, limit, offset)
 
             return ReturnSucesso(res, produtos)
-        } catch (e) {
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -397,8 +414,13 @@ class ProdutoControlle {
             const produtos = await ProdutoModel.buscarPorCodigoDeBarras(codigo)
 
             return ReturnSucesso(res, produtos)
-        } catch (e) {
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -429,8 +451,13 @@ class ProdutoControlle {
             retorno.valorTotalSMargem = parseFloat(valorTotals.toFixed(2))
 
             return ReturnSucesso(res, retorno)
-        } catch (e) {
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 }

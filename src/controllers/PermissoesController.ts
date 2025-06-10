@@ -1,6 +1,6 @@
-import { ReturnErro, ReturnSucesso } from "../helpers/helper";
+import { ReturnErro, ReturnSucesso, ReturnErroCatch } from "../helpers/helper";
 import PermissoesModel from "../models/PermissoesModel";
-class PermissoesControlle{
+class PermissoesControlle {
 
     public async getPermissoes(req: any, res: any) {
 
@@ -10,9 +10,12 @@ class PermissoesControlle{
             const retorno = await PermissoesModel.buscarPorId(id)
             return ReturnSucesso(res, retorno)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message);
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
 
         }
     }
@@ -24,9 +27,12 @@ class PermissoesControlle{
             const retorno = await PermissoesModel.buscarTodos()
             return ReturnSucesso(res, retorno)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message);
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
 
         }
     }
@@ -36,9 +42,12 @@ class PermissoesControlle{
             const retorno = await PermissoesModel.salvar(req.body)
             return ReturnSucesso(res, retorno)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message);
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
 
         }
     }

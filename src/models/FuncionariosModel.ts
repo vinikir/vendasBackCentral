@@ -15,10 +15,15 @@ class FuncionariosModel {
             const funcionario = await Funcionarios.create(infos)
             return funcionario.toObject();
 
-        } catch (e) {
+        } catch (e: unknown) {
 
             console.log(e)
-            throw new Error(e.message)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
     }
@@ -33,11 +38,15 @@ class FuncionariosModel {
         try {
             return await Funcionarios.updateOne({ _id: id }, infos, { new: true })
 
-        } catch (e) {
+        } catch (e: unknown) {
 
             console.log(e)
-            throw new Error(e.message)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
@@ -46,10 +55,15 @@ class FuncionariosModel {
         try {
             return await Funcionarios.find(infos, { nome: 1, cpfCnpj: 1 }).sort({ 'nome': 1 }).limit(limit).skip(ofset)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message)
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
     }
@@ -63,10 +77,15 @@ class FuncionariosModel {
 
             return await Funcionarios.find({ _id: valor })
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message)
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
@@ -76,11 +95,15 @@ class FuncionariosModel {
 
             return await Funcionarios.find({ login: login })
 
-        } catch (e) {
+        } catch (e: unknown) {
 
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
-            throw new Error(e.message)
-
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
@@ -90,11 +113,15 @@ class FuncionariosModel {
             return await Funcionarios.find({cargo: {$in: [CargosTiposEnums.administrador, CargosTiposEnums.vendedor]}})
             
 
-        } catch (e) {
+        } catch (e: unknown) {
 
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
-            throw new Error(e.message)
-
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 

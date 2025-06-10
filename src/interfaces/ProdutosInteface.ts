@@ -7,5 +7,5 @@ export interface ProdutoEstoque {
     _id: string;
     nome: string;
     estoque: number;
-    tipo: string; // ex: "venda", "servico", etc
+    tipo: string; 
 }

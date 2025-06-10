@@ -1,11 +1,14 @@
 export interface UserInterface {
-    _id?: string;
+    _id: string;
     ativo: boolean;
     nome: string;
     cpfCnpj:string;
     telefone?:string;
     email?:string
 }
+
+export type UserParaCriar = Omit<UserInterface, "_id">;
+
 
 export interface ErrorInterface{
     erro:boolean,
@@ -15,7 +18,7 @@ export interface ErrorInterface{
 
 export interface ValidarLoginInterface{
     permitido:boolean;
-    msg?:string
+    msg:string
 }
 
 export interface ProductSearchParams{

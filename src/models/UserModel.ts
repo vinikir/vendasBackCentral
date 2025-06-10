@@ -2,144 +2,191 @@ import { UserInterface } from "../interfaces/Interface"
 import UsersShema from "../schemas/Users"
 class UserModel {
 
-    public async getAll(){
+    public async getAll() {
         console.log(await UsersShema.find())
     }
 
-    public async salvar(infos:object): Promise<UserInterface>{
+    public async salvar(infos: object): Promise<UserInterface> {
 
-        try{
+        try {
 
             const usuario = await UsersShema.create(infos)
             return usuario.toObject();
 
-        }catch(e){
+        } catch (e: unknown) {
 
             console.log(e)
-            throw new Error(e.message)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
-        
+
     }
 
-    public async deletePorId(id:string){
+    public async deletePorId(id: string) {
 
-        try{
+        try {
 
-            return await UsersShema.deleteOne({_id:id})
+            return await UsersShema.deleteOne({ _id: id })
 
-        }catch(e){
+        }catch (e: unknown) {
 
             console.log(e)
-            throw new Error(e.message)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
-        
+
     }
 
-    
 
-    public async findLogin(login:string):Promise<Array<object>>{
 
-        try{
-            
-            return await UsersShema.find({login:login})
+    public async findLogin(login: string): Promise<Array<object>> {
 
-        }catch(e){
+        try {
 
-            
-            throw new Error(e.message)
-            
-        }
-    }
+            return await UsersShema.find({ login: login })
 
-    public async findPorLogin(login:string){
-
-        try{
-            
-            return await UsersShema.find({login:login})
-
-        }catch(e){
+        } catch (e: unknown) {
 
             console.log(e)
-            throw new Error(e.message)
-            
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
-    public async atualizar(id:string, infos:object){
-        try{
-            return await UsersShema.updateOne({_id:id}, infos, { new: true })
+    public async findPorLogin(login: string) {
 
-        }catch(e){
+        try {
+
+            return await UsersShema.find({ login: login })
+
+        } catch (e: unknown) {
 
             console.log(e)
-            throw new Error(e.message)
-            
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
-    public async buscar(infos:object, limit:number, ofset:number){
+    public async atualizar(id: string, infos: object) {
+        try {
+            return await UsersShema.updateOne({ _id: id }, infos, { new: true })
 
-        try{
-            return await UsersShema.find(infos,{nome:1,cpfCnpj:1}).sort({'nome':1}).limit(limit).skip(ofset)
+        } catch (e: unknown) {
 
-        }catch(e){
-            
-            throw new Error(e.message)
-            
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
+        }
+    }
+
+    public async buscar(infos: object, limit: number, ofset: number) {
+
+        try {
+            return await UsersShema.find(infos, { nome: 1, cpfCnpj: 1 }).sort({ 'nome': 1 }).limit(limit).skip(ofset)
+
+        } catch (e: unknown) {
+
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
     }
 
-    public async buscaVendedor(){
+    public async buscaVendedor() {
 
-        try{
-          
-            return await UsersShema.find({ $or: [ { tipo:"socio" } , {tipo:"funcionario"} ] },{nome:1,_id:1}).sort({'nome':1})
+        try {
 
-        }catch(e){
-            
-            throw new Error(e.message)
-            
+            return await UsersShema.find({ $or: [{ tipo: "socio" }, { tipo: "funcionario" }] }, { nome: 1, _id: 1 }).sort({ 'nome': 1 })
+
+        }catch (e: unknown) {
+
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
     }
 
-    public async validaCpfCnpjCadastrado( valor:string) {
-        try{
-          
-            return await UsersShema.find({ cpfCnpj: valor})
+    public async validaCpfCnpjCadastrado(valor: string): Promise<Array<UserInterface>> {
+        try {
 
-        }catch(e){
-            
-            throw new Error(e.message)
-            
+            return await UsersShema.find({ cpfCnpj: valor })
+
+        } catch (e: unknown) {
+
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
-    public async buscaPorId( valor:string) {
-        try{
-          
-            return await UsersShema.find({ _id: valor})
+    public async buscaPorId(valor: string): Promise<Array<UserInterface>> {
+        try {
 
-        }catch(e){
-            
-            throw new Error(e.message)
-            
+            return await UsersShema.find({ _id: valor })
+
+        } catch (e: unknown) {
+
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
-    public async buscaPorArrayId(valor:Array<string>) {
-        try{
-          
-            return await UsersShema.find({ _id: { $in: valor}})
+    public async buscaPorArrayId(valor: Array<string>):Promise<Array<UserInterface>> {
+        try {
 
-        }catch(e){
-            
-            throw new Error(e.message)
-            
+            return await UsersShema.find({ _id: { $in: valor } })
+
+        } catch (e: unknown) {
+
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
     }
 
-    
+
 }
 
 export default new UserModel()

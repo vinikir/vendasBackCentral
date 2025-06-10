@@ -40,8 +40,13 @@ class DespesaController {
             });
 
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -49,8 +54,13 @@ class DespesaController {
         try {
             const resultado = await DespesasModel.listarTodos();
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -61,8 +71,13 @@ class DespesaController {
 
             const resultado = await DespesasModel.buscarPorId(id);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -73,8 +88,13 @@ class DespesaController {
 
             const resultado = await DespesasModel.atualizarPorId(id, req.body);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -91,8 +111,13 @@ class DespesaController {
 
             const resultado = await DespesasModel.listarComFiltro(filtros);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 

@@ -40,8 +40,13 @@ class FornecedorController {
             });
 
             return ReturnSucesso(res, fornecedorCriado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
@@ -53,8 +58,13 @@ class FornecedorController {
 
             const resultado = await FornecedoresModel.buscarPorId(id);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
@@ -66,21 +76,31 @@ class FornecedorController {
 
             const resultado = await FornecedoresModel.buscarPorDocumento(documento);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
     public async buscarPorNome(req: Request, res: Response) {
         try {
             const { nome } = req.query;
-            
+
             if (!nome || typeof nome !== "string") return ReturnErroPadrao(res, 5);
 
             const resultado = await FornecedoresModel.buscarPorNome(nome);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
@@ -93,8 +113,13 @@ class FornecedorController {
 
             const resultado = await FornecedoresModel.atualizarPorId(id, dados);
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
@@ -102,8 +127,13 @@ class FornecedorController {
         try {
             const resultado = await FornecedoresModel.listarTodos();
             return ReturnSucesso(res, resultado);
-        } catch (e: any) {
-            return ReturnErroCatch(res, e.message);
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 }

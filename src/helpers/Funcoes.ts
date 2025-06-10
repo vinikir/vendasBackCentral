@@ -1,4 +1,5 @@
 import { ProdutoEstoque, ProdutoVenda } from "../interfaces/ProdutosInteface";
+import { ProdutoInterface } from "../schemas/Produto";
 
 export const ValidarCpfCnpj = (valor: String): { valido: boolean; tipo: string, valor: string  } => {
     // Remove caracteres especiais e espaços
@@ -82,7 +83,7 @@ export  const ExtrairProdutoIds = (dados: { produtoId: string }[]): string[] => 
     return dados.map(item => item.produtoId);
 }
 
-export const ValidaSaldoPositivo = (produtosVenda: Array<ProdutoVenda>, produtosEstoque: Array<ProdutoEstoque>) => {
+export const ValidaSaldoPositivo = (produtosVenda: Array<ProdutoVenda>, produtosEstoque: Array<ProdutoInterface>) => {
   
     for (let index = 0; index < produtosVenda.length; index++) {
         
@@ -141,7 +142,7 @@ export const ajustarPesquisaParaBuscaLike_old = (search:string):RegExp => {
     return new RegExp(search, 'i');
 }
 
-export const ajustarPesquisaParaBuscaLike = (search: string): any => {
+export const ajustarPesquisaParaBuscaLike = (search: string): RegExp | Array<RegExp> => {
     if (search.includes('#')) {
         // Dividir a string em termos usando o delimitador `#`
         const terms = search.split('#');
@@ -162,7 +163,7 @@ export const ajustarPesquisaParaBuscaLike = (search: string): any => {
         });
 
         // Retorna a estrutura de busca para `$and`
-        return { $and: regexArray.map(regex => ({ nome: { $regex: regex } })) };
+        return  regexArray ;
     }
 
     // Caso não tenha `#`, usa a lógica padrão

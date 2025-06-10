@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { CardPaymentRequest } from '../interfaces/MercadoPagoInterface';
 import { processCardPayment , processPixQR, processStatus } from '../Services/MercadoPagoServices';
+import { ReturnErroCatch } from '../helpers/helper';
 
 class IntegcaoMercadoPagoController {
 
@@ -26,14 +27,14 @@ class IntegcaoMercadoPagoController {
 
             res.status(200).json(result);
 
-        } catch (error: any) {
-
-            res.status(500).json({
-                error: error.message,
-                success: false
-            });
-
-        }
+        } catch (e: unknown) {
+                  
+                    if (e instanceof Error) {
+                        return ReturnErroCatch(res, e.message)
+                    }
+                    return ReturnErroCatch(res, "Erro inesperado")
+                    
+                }
 
     }
 
@@ -42,11 +43,13 @@ class IntegcaoMercadoPagoController {
             const result = await processStatus(req.body.id)
             return res.status(200).json(result);
 
-        }catch (error) {
-            res.status(500).json({
-                error: error.message,
-                success: false
-            });
+        }catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -57,11 +60,13 @@ class IntegcaoMercadoPagoController {
             const result = await processPixQR(req.body.valor)
             return res.status(200).json(result);
 
-        } catch (error) {
-            res.status(500).json({
-                error: error.message,
-                success: false
-            });
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 }

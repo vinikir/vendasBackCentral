@@ -1,8 +1,8 @@
 import FaturadoSchema from "../schemas/Faturado";
-
+import { FaturadoInterface } from "../schemas/Faturado";
 class FaturadoModel {
 
-    public async salvar(infos: object) {
+    public async salvar(infos: FaturadoInterface): Promise<FaturadoInterface> {
     
         let id = 1
 
@@ -18,10 +18,15 @@ class FaturadoModel {
 
             return await FaturadoSchema.create(infos)
 
-        } catch (e) {
+        }catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
     }
@@ -31,10 +36,15 @@ class FaturadoModel {
 
             return await FaturadoSchema.find({})
             
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
       

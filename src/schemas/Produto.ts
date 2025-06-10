@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import moment from "moment-timezone";
 
 export interface ProdutoInterface extends Document {
+    _id: string;
     ativo: boolean,
     nome: string | undefined,
     valorVenda: number,
@@ -27,11 +28,11 @@ export interface ProdutoInterface extends Document {
 export interface ProdutoInterfaceUpdate  {
     ativo?: boolean,
     nome?: string,
-    valorVenda?: number,
+    valorVenda: number,
     valorCompra?: number,
-    estoque?: number,
+    estoque: number,
     estoque_reservado?: number,
-    margem?:number,
+    margem:number,
     descontoMaximo?:number,
     descricao?:string,
     tipo?:string,

@@ -3,6 +3,7 @@ import cors from "cors"
 import mongoose from "mongoose";
 import routes from "./routes/routes";
 import carregarSwagger from "./swagger";
+import { connectDatabase } from "./database";
 
 class App {
 
@@ -21,11 +22,12 @@ class App {
         this.express.use(cors())
     }
 
-    private database():void{
+    private async database():Promise<void> {
         try{
-            mongoose.connect("mongodb+srv://vinikir:bZGelmKUSysEoXQ1@gem.2hrtlg6.mongodb.net/vendas?retryWrites=true&w=majority&appName=GEM")
-            //mongoose.connect("mongodb://localhost:27017/vendas")
-            //mongoose.connect("mongodb://localhost:27017/vendas_teste")
+            
+            await connectDatabase(process.env.MONGO_URI || "mongodb://localhost:27017/vendas");
+
+          
         }catch(e:any){
             console.log(e.message)
         }

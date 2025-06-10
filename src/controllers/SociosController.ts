@@ -5,45 +5,48 @@ import { ValidarCpfCnpj, contemCaracterNaoNumerico } from "../helpers/Funcoes";
 
 class SociosControlle {
 
-   
+
     public async buscarTodos(req: Request, res: Response): Promise<Response> {
-        try{
+        try {
 
             const res_busca = await SociosModel.getAll()
 
             return ReturnSucesso(res, res_busca)
 
 
-        }catch (e) {
+        } catch (e: unknown) {
 
-            return ReturnErroCatch(res, e.message)
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
 
         }
     }
 
-    
+
     public async salvar(req: Request, res: Response): Promise<Response> {
         try {
 
-            const { 
+            const {
                 nome,
                 percenTualLucro,
-                cpf 
+                cpf
             } = req.body
 
-            if(typeof nome == "undefined" || nome.trim() == ""){
+            if (typeof nome == "undefined" || nome.trim() == "") {
 
                 return ReturnErroPadrao(res, 21)
 
             }
 
-             if(typeof percenTualLucro == "undefined"   ){
+            if (typeof percenTualLucro == "undefined") {
 
                 return ReturnErroPadrao(res, 22)
 
             }
 
-            if(contemCaracterNaoNumerico(percenTualLucro)){
+            if (contemCaracterNaoNumerico(percenTualLucro)) {
 
                 return ReturnErroPadrao(res, 23)
 
@@ -51,7 +54,7 @@ class SociosControlle {
 
             const resultadoValidacao = ValidarCpfCnpj(cpf)
 
-            if(!resultadoValidacao.valido){
+            if (!resultadoValidacao.valido) {
 
                 return ReturnErro(res, `${resultadoValidacao.tipo} invalido.`, 998);
 
@@ -61,7 +64,7 @@ class SociosControlle {
             const infos = {
                 nome,
                 cpf,
-                ativo:true,
+                ativo: true,
                 percenTualLucro
 
 
@@ -71,9 +74,12 @@ class SociosControlle {
 
             return ReturnSucesso(res, res_salvar)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            return ReturnErroCatch(res, e.message)
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
 
         }
     }

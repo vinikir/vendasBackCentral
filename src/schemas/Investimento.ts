@@ -1,14 +1,24 @@
 import { Schema, model, Document } from "mongoose";
 
 
-interface InvestimentoInterface extends Document {
+export interface InvestimentoInterface extends Document {
     id:number,
     tipo: string,
     valor: number,
     dataSalvou: string,
-    dataMovimentacao: Date,
+    dataMovimentacao: string | Date,
     informacoes:string,
     socio:string
+}
+
+export interface CompraMercadoriaInterface {
+    id?:number,
+    tipo: string,
+    valor: number,
+    dataSalvou: string,
+    dataMovimentacao: string | Date,
+    informacoes:string,
+    
 }
 
 export const InvestimentoSchema = new Schema({

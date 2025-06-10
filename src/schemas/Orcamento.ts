@@ -11,6 +11,17 @@ export interface OrcamentoInterface extends Document {
     clienteId:string
 }
 
+export interface OrcamentoInterfaceSalvar {
+    user:string;
+    userId: string;
+    tipoVenda:string;
+    produtos:Array<object>;
+    data:string;
+    orcamentoId:number;
+    status:string;
+    clienteId?:string
+}
+
 export const OrcamentoSchema = new Schema({
     user:String,
     userId: String,

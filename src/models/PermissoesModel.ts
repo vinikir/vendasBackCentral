@@ -13,23 +13,33 @@ class PermissoesModel {
             
             return await Permissoes.create(infos)
 
-        }catch(e){
+        }catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
         
     }
 
-    public async buscarPorId(id:string):Promise<PermissaoInterface>{
+    public async buscarPorId(id:string):Promise<PermissaoInterface | null> {
         try{
             
             return await Permissoes.findOne({_id:id})
 
-        }catch(e){
+        }catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
         
     }
@@ -39,10 +49,15 @@ class PermissoesModel {
             
             return await Permissoes.find({})
 
-        }catch(e){
+        }catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
         
     }

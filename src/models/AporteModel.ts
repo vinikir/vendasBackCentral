@@ -8,10 +8,15 @@ class AporteModel {
 
             return await Aportes.create(infos)
 
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
     }
@@ -21,10 +26,15 @@ class AporteModel {
 
             return await Aportes.find({})
             
-        } catch (e) {
+        } catch (e: unknown) {
 
-            throw new Error(e.message);
+            console.log(e)
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
 
+            // fallback genérico caso não seja um Error
+            throw new Error("Erro inesperado");
         }
 
       

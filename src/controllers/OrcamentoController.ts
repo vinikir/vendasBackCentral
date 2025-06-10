@@ -39,6 +39,7 @@ class OrcamentoController {
                 produtos,
                 status:"aberto",
                 data: moment().tz("America/Sao_Paulo").format(),
+                orcamentoId:0
             }
 
             const res_salvarOrcametno = await OrcamentoModel.salvar(InfosSalvar)
@@ -49,10 +50,13 @@ class OrcamentoController {
 
             return ReturnSucesso(res, res_salvarOrcametno)
 
-        }catch(e){
-
-            return ReturnErroCatch(res, e.message)
-
+        }catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
 
     }
@@ -64,10 +68,13 @@ class OrcamentoController {
 
             return ReturnSucesso(res, res_busca)
 
-        }catch(e){
-
-            return ReturnErroCatch(res, e.message)
-
+        }catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 }

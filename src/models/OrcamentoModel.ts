@@ -1,4 +1,4 @@
-import  OrcamentoSchema from "../schemas/Orcamento"
+import  OrcamentoSchema, {OrcamentoInterface, OrcamentoInterfaceSalvar} from "../schemas/Orcamento"
 
 class VendaModel {
 
@@ -6,7 +6,7 @@ class VendaModel {
         return await OrcamentoSchema.find().sort({ vendaId: -1 })
     }
 
-    public async salvar(infos:object){
+    public async salvar(infos:OrcamentoInterfaceSalvar ) :Promise<OrcamentoInterface>{
 
         let id = 1
 
@@ -18,14 +18,18 @@ class VendaModel {
                 id = ultimoOcamento.orcamentoId +1
             }
 
-            infos.orcamentoId =id
+            infos.orcamentoId = id
             
             return await OrcamentoSchema.create(infos)
 
-        }catch(e){
+        }catch (e: unknown) {
 
-            throw new Error(e.message);
 
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            throw new Error("Erro inesperado");
         }
         
     }

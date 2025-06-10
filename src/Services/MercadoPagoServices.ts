@@ -6,45 +6,54 @@ dotenv.config()
 const client = new MercadoPagoConfig({ accessToken: process.env.MERCADO_ACCESS_TOKEN as string })
 const payments = new Payment(client);
 
-export const processPixQR = async (valor) => {
+export const processPixQR = async (valor: number) => {
 	try {
 
 		const body = {
-			transaction_amount:valor,
-			description:"Teste pix",
+			transaction_amount: valor,
+			description: "Teste pix",
 			payment_method_id: "pix",
-			payer:{
-				email:"vinikir@gmail.com"
+			payer: {
+				email: "vinikir@gmail.com"
 			}
 		}
 
-		return await payments.create({ body})
-		
-	} catch (error) {
-		throw new Error(`processPixQR: ${error.message}`);
+		return await payments.create({ body })
+
+	} catch (e: unknown) {
+		if (e instanceof Error) {
+			throw new Error(e.message);
+		}
+		throw new Error("Erro inesperado");
 	}
 }
 
-export const processStatus = async (id) => {
+export const processStatus = async (id: string) => {
 	try {
 
-		
 
-		return await payments.get({ id})
-		
-	} catch (error) {
-		throw new Error(`processStatus: ${error.message}`);
+
+		return await payments.get({ id })
+
+	} catch (e: unknown) {
+		if (e instanceof Error) {
+			throw new Error(e.message);
+		}
+		throw new Error("Erro inesperado");
 	}
 }
 
-export  const processCardPayment = async (paymentData: CardPaymentRequest) => {
+export const processCardPayment = async (paymentData: CardPaymentRequest) => {
 
 
 	try {
 
 
-	} catch (error: any) {
-		throw new Error(`MP-API: ${error.message}`);
+	} catch (e: unknown) {
+		if (e instanceof Error) {
+			throw new Error(e.message);
+		}
+		throw new Error("Erro inesperado");
 	}
 }
 

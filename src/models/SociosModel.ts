@@ -12,10 +12,14 @@ class SociosModel {
 
             return await Socios.create(infos)
 
-        }catch(e){
+        }catch (e: unknown) {
 
-            console.log(e)
-            throw new Error(e.message)
+
+            if (e instanceof Error) {
+                throw new Error(e.message);
+            }
+
+            throw new Error("Erro inesperado");
         }
             
     }

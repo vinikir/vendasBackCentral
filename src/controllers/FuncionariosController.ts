@@ -28,10 +28,13 @@ class UserControlle {
 
             return ReturnSucesso(res, res_up)
 
-        } catch (e) {
-
-            return ReturnErroCatch(res, e.message)
-
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -123,9 +126,13 @@ class UserControlle {
 
             return ReturnSucesso(res, sucess)
 
-        } catch (e) {
-
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 
@@ -147,9 +154,13 @@ class UserControlle {
 
             return ReturnSucesso(res, resultado)
 
-        } catch (e) {
-
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
     }
 

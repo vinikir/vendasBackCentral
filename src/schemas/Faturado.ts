@@ -1,6 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 
-interface FaturadoInterface extends Document {
+export interface FaturadoInterfaceDocument extends Document {
     user:string;
     userId: string;
     data:string;
@@ -9,7 +9,20 @@ interface FaturadoInterface extends Document {
     status:string;
     pagamento:Array<object>
     valor:number
-    clienteId:string
+    clienteId?:string
+}
+
+
+export interface FaturadoInterface {
+    user:string;
+    userId: string;
+    data:string;
+    vendaId:string;
+    faturamentoId:number;
+    status:string;
+    pagamento:Array<object>
+    valor:number
+    clienteId?:string
 }
 
 export const FaturadoSchema = new Schema({
@@ -30,4 +43,4 @@ FaturadoSchema.index({ userId: 1});
 
 
 
-export default model<FaturadoInterface>('faturado',FaturadoSchema)
+export default model<FaturadoInterfaceDocument>('faturado',FaturadoSchema)

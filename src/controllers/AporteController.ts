@@ -41,8 +41,13 @@ class AporteController {
 
             return ReturnSucesso(res, resSalvar)
 
-        }catch(e){
-            return  ReturnErroCatch(res, e.message)
+        }catch (e: unknown) {
+          
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+            
         }
         
 

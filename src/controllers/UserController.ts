@@ -4,7 +4,7 @@ import { ReturnSucesso, ReturnErroPadrao, ReturnErro, ReturnErroCatch } from "..
 import bcrypt from 'bcrypt'
 import UserModel from "../models/UserModel";
 import dotenv from 'dotenv'
-import { UserInterface, ValidarLoginInterface } from "../interfaces/Interface";
+import { UserInterface, UserParaCriar, ValidarLoginInterface } from "../interfaces/Interface";
 import { ValidarCpfCnpj } from "../helpers/Funcoes";
 import { UserSearchParams } from "../interfaces/Interface";
 import { ajustarPesquisaParaBuscaLike } from "../helpers/Funcoes";
@@ -74,19 +74,23 @@ class UserControlle {
             }
 
 
-            if (typeof query != "undefined" && typeof query.search != "undefined" && query.search != "undefined" && query.search != "") {
-
-                query.search = ajustarPesquisaParaBuscaLike(query.search)
-
-                if (typeof query.search === "string" && !isNaN(Number(query.search))) {
-                    infos.cpfCnpj = {
-                        $regex: new RegExp(query.search, 'i')
-                    }
+            if (typeof query?.search === 'string' && query.search.trim() !== '') {
+                
+                const busca = ajustarPesquisaParaBuscaLike(query.search)
+              
+                if ( !isNaN(Number(busca))) {
+                    infos.cpfCnpj =  busca
+                    
                 } else {
-
-                    infos.nome = {
-                        $regex: new RegExp(query.search, 'i')
+                    if(Array.isArray(busca)){
+                        infos = { $and : busca.map((item: RegExp) => ({
+                           nome: item
+                        })) }
+                    } else {
+                        infos.nome =  busca
                     }
+                   
+                    
                 }
 
             }
@@ -115,8 +119,13 @@ class UserControlle {
 
             return ReturnSucesso(res, usuario)
 
-        } catch (e) {
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
@@ -136,17 +145,21 @@ class UserControlle {
 
             if (typeof query != "undefined" && typeof query.search != "undefined" && query.search != "undefined" && query.search != "") {
 
-                query.search = ajustarPesquisaParaBuscaLike(query.search)
+                const busca = ajustarPesquisaParaBuscaLike(query.search)
                
-                if (typeof query.search === "string" && !isNaN(Number(query.search))) {
+                if (typeof busca === "string" && !isNaN(Number(busca))) {
                     infos.cpfCnpj = {
-                        $regex: new RegExp(query.search, 'i')
+                        $regex:busca
                     }
                 } else {
-
-                    infos.nome = {
-                        $regex: new RegExp(query.search, 'i')
+                    if(Array.isArray(busca)){
+                        infos = { $and : busca.map((item: RegExp) => ({
+                           nome: item
+                        })) }
+                    } else {
+                        infos.nome =  busca
                     }
+                   
                 }
 
             }
@@ -176,8 +189,13 @@ class UserControlle {
 
             return ReturnSucesso(res, usuario)
 
-        } catch (e) {
-            return ReturnErroCatch(res, e.message)
+        } catch (e: unknown) {
+
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
+
         }
     }
 
@@ -234,7 +252,7 @@ class UserControlle {
                 telefoneLimpo = telefone.replace(/\D/g, '')
             }
            
-            const user: UserInterface = {
+            const user: UserParaCriar = {
                 ativo: ativo !== undefined ? ativo : true,
                 nome,
                 cpfCnpj: cpfCnpjLimpo,
@@ -303,9 +321,12 @@ class UserControlle {
 
             return ReturnSucesso(res, usuarioSalvo);
 
-        } catch (e: any) {
+        } catch (e: unknown) {
 
-            return ReturnErroCatch(res, e.message);
+            if (e instanceof Error) {
+                return ReturnErroCatch(res, e.message)
+            }
+            return ReturnErroCatch(res, "Erro inesperado")
 
         }
     }

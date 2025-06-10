@@ -1,13 +1,14 @@
 import request from "supertest";
 import app from "../app";
 import mongoose from "mongoose";
+import { connectDatabase } from "../database";
 
 beforeAll(async () => {
-    await mongoose.connect("mongodb://localhost:27017/vendas_test");
+    await connectDatabase("mongodb://localhost:27017/vendas_test_");
 });
 
 afterAll(async () => {
-    await mongoose.connection.dropDatabase();
+    //await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
 });
 
