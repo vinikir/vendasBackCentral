@@ -26,7 +26,7 @@ const upload = multer({ storage: storage});
 const routes = Router()
 
 routes.get('/', (req, res) => {
-    res.send({"versao":"2"})
+    res.send({"versao":"3"})
 })	
 
 routes.post('/user',UserController.create.bind(UserController))	
